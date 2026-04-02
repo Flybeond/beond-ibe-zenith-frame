@@ -91,9 +91,9 @@ export default function SiteFooter() {
   const year = new Date().getFullYear();
   return (
     <footer className="bg-(--color-ink) text-white mt-10">
-      <div className="max-w-6xl mx-auto px-4 pt-12 pb-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-          <div className="flex flex-col gap-4">
+      <div className="contaner max-w-6xl mx-auto px-4 pt-12 pb-8">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-10">
+          <div className="flex flex-col gap-4 md:col-span-3">
             <a
               href="https://flybeond.com/"
               aria-label="beOnd home"
@@ -126,26 +126,28 @@ export default function SiteFooter() {
             </div>
           </div>
 
-          {footerColumns.map((col) => (
-            <div key={col.heading} className="flex flex-col gap-4">
-              <div className="text-sm font-semibold">{col.heading}</div>
-              <div className="flex flex-col gap-3 text-sm text-white/80">
-                {col.links.map((l) => (
-                  <a
-                    key={l.href}
-                    href={l.href}
-                    target={l.href.startsWith("http") ? "_blank" : undefined}
-                    rel="noreferrer"
-                    className="hover:text-white hover:underline underline-offset-4 transition-colors"
-                  >
-                    {l.label}
-                  </a>
-                ))}
+          <div className="md:col-span-6 grid grid-cols-1 sm:grid-cols-3 gap-10">
+            {footerColumns.map((col) => (
+              <div key={col.heading} className="flex flex-col gap-4">
+                <div className="text-sm font-semibold">{col.heading}</div>
+                <div className="flex flex-col gap-3 text-sm text-white/80">
+                  {col.links.map((l) => (
+                    <a
+                      key={l.href}
+                      href={l.href}
+                      target={l.href.startsWith("http") ? "_blank" : undefined}
+                      rel="noreferrer"
+                      className="hover:text-white hover:underline underline-offset-4 transition-colors"
+                    >
+                      {l.label}
+                    </a>
+                  ))}
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
 
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4 md:col-span-3">
             <div className="text-sm font-semibold">Sign up for our newsletter</div>
             <p className="text-sm text-white/80 leading-relaxed">
               Stay up to date with offers and announcements.

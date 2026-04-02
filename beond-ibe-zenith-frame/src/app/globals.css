@@ -11,12 +11,12 @@
   --foreground: #0f100f;
 
   --surface: #f0f0f0;
-  --surface-2: #e6ded5;
+  --surface-2: #ffffff;
   --muted: #676e76;
 
   --brand: #d2926a; /* warm sand/gold accent */
   --brand-ink: #997a00; /* deeper gold/brown */
-  --ink: #000000;
+  --ink: #2a2e36;
 }
 
 @theme inline {

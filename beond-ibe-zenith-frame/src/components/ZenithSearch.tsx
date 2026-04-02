@@ -111,17 +111,15 @@ export default function ZenithSearch(props: { config?: Partial<ZenithSearchConfi
   }, []);
 
   return (
-    <section className="p-10">
+    <section className="px-4 py-10 flex justify-center">
       <style>{`
         body, input { font-family: 'Montserrat', sans-serif; }
         input:focus-visible { outline: none; }
       `}</style>
 
-      <div className="max-w-6xl mx-auto">
+      <div className="w-full max-w-5xl">
         <div className="rounded-2xl bg-(--color-background) shadow-sm border border-black/5 p-6 md:p-8">
-          <h3 className="text-center text-lg font-semibold mb-6">
-            beond Zenith IBE Search Criteria DIV test
-          </h3>
+
 
           <div id="SearchCriterias" data-config={JSON.stringify(config)} />
         </div>
