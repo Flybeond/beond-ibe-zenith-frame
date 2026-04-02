@@ -1,0 +1,40 @@
+@import "tailwindcss";
+
+:root {
+  /* Force light scheme even if OS/browser prefers dark */
+  color-scheme: light;
+}
+
+:root {
+  /* beOnd-inspired palette (from flybeond.com) */
+  --background: #ffffff;
+  --foreground: #0f100f;
+
+  --surface: #f0f0f0;
+  --surface-2: #e6ded5;
+  --muted: #676e76;
+
+  --brand: #d2926a; /* warm sand/gold accent */
+  --brand-ink: #997a00; /* deeper gold/brown */
+  --ink: #000000;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-muted: var(--muted);
+  --color-brand: var(--brand);
+  --color-brand-ink: var(--brand-ink);
+  --color-ink: var(--ink);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  /* flybeond.com uses a light, premium neutral behind content */
+  background: var(--surface-2);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}

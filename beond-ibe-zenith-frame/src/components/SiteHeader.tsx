@@ -1,0 +1,87 @@
+import React from "react";
+
+const logoUrl =
+  "https://edge.sitecorecloud.io/arabesquefl5949-beondibe-ibeprod-b667/media/flightbooking/Homepage/logo.png";
+
+const navItems: Array<{ label: string; href: string }> = [
+  { label: "Destinations", href: "https://flybeond.com/en/destinations" },
+  { label: "Experience", href: "https://flybeond.com/en/experience" },
+  { label: "Offers", href: "https://flybeond.com/en/offers" },
+  {
+    label: "Business Class Flights",
+    href: "https://flybeond.com/en/business-class-flights",
+  },
+  { label: "Why beOnd", href: "https://flybeond.com/en/company/whybeond" },
+];
+
+export default function SiteHeader() {
+  return (
+    <header className="w-full bg-(--color-background) text-(--color-foreground) border-b border-black/5">
+      <div className="max-w-6xl mx-auto px-4">
+        <div className="h-16 flex items-center justify-between gap-4">
+          <a
+            href="https://flybeond.com/"
+            className="flex items-center gap-3"
+            aria-label="beOnd home"
+          >
+            <img
+              src={logoUrl}
+              alt="beOnd"
+              className="h-7 w-auto"
+              loading="eager"
+            />
+          </a>
+
+          <nav className="hidden md:flex items-center gap-7 text-sm font-medium">
+            {navItems.map((item) => (
+              <a
+                key={item.href}
+                href={item.href}
+                className="hover:underline underline-offset-4"
+              >
+                {item.label}
+              </a>
+            ))}
+          </nav>
+
+          <div className="hidden md:flex items-center">
+            <a
+              href="#SearchCriterias"
+              className="rounded-full border border-black/15 px-5 py-2 text-sm font-semibold hover:bg-(--color-foreground) hover:text-(--color-background) transition-colors"
+            >
+              Book
+            </a>
+          </div>
+
+          <div className="md:hidden">
+            <details className="relative">
+              <summary className="list-none cursor-pointer select-none rounded-full border border-black/15 px-4 py-2 text-sm font-semibold">
+                Menu
+              </summary>
+              <div className="absolute right-0 mt-2 w-64 rounded-xl border border-black/10 bg-(--color-background) shadow-lg p-4 z-50">
+                <div className="flex flex-col gap-3 text-sm font-medium">
+                  {navItems.map((item) => (
+                    <a
+                      key={item.href}
+                      href={item.href}
+                      className="hover:underline underline-offset-4"
+                    >
+                      {item.label}
+                    </a>
+                  ))}
+                  <a
+                    href="#SearchCriterias"
+                    className="pt-2 rounded-lg border border-black/10 px-3 py-2 hover:bg-(--color-surface-2)"
+                  >
+                    Book
+                  </a>
+                </div>
+              </div>
+            </details>
+          </div>
+        </div>
+      </div>
+    </header>
+  );
+}
+
