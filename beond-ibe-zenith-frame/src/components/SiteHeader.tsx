@@ -1,7 +1,6 @@
 import React from "react";
 
-const logoUrl =
-  "https://edge.sitecorecloud.io/arabesquefl5949-beondibe-ibeprod-b667/media/flightbooking/Homepage/logo.png";
+const logoUrl = "/companylogo-dark.png";
 
 const navItems: Array<{ label: string; href: string }> = [
   { label: "Destinations", href: "https://flybeond.com/en/destinations" },

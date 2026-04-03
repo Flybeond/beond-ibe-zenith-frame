@@ -1,7 +1,6 @@
 import React from "react";
 
-const logoUrl =
-  "https://edge.sitecorecloud.io/arabesquefl5949-beondibe-ibeprod-b667/media/flightbooking/Homepage/logo.png";
+const logoUrl = "/companylogo-white.png";
 
 const socialIcons: Array<{ label: string; href: string; src: string }> = [
   {

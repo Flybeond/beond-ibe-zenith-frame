@@ -11,7 +11,7 @@
   --foreground: #0f100f;
 
   --surface: #f0f0f0;
-  --surface-2: #ffffff;
+  --surface-2: #e6ded5;
   --muted: #676e76;
 
   --brand: #d2926a; /* warm sand/gold accent */
@@ -37,4 +37,22 @@ body {
   background: var(--surface-2);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+.container {
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+@media (min-width: 320px) {
+  .container {
+    max-width: 100%;
+    padding: 0 15px;
+  }
+}
+
+@media (min-width: 640px) {
+  .container {
+    max-width: 640px;
+  }
 }
