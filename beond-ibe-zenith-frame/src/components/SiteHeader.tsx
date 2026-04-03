@@ -3,14 +3,9 @@ import React from "react";
 const logoUrl = "/companylogo-dark.png";
 
 const navItems: Array<{ label: string; href: string }> = [
-  { label: "Destinations", href: "https://flybeond.com/en/destinations" },
-  { label: "Experience", href: "https://flybeond.com/en/experience" },
-  { label: "Offers", href: "https://flybeond.com/en/offers" },
-  {
-    label: "Business Class Flights",
-    href: "https://flybeond.com/en/business-class-flights",
-  },
-  { label: "Why beOnd", href: "https://flybeond.com/en/company/whybeond" },
+  { label: "Manage Booking", href: "https://fo-emea.ttinteractive.com/Zenith/FrontOffice/beond/en-GB/Home/FindBooking" },
+  { label: "Check In", href: "https://fo-emea.ttinteractive.com/zenith/frontoffice/beond/en-GB/Home/FindBooking?mode=webchecking" },
+  { label: "Flight Status", href: "https://fo-emea.ttinteractive.com/Zenith/FrontOffice/beond/en-GB/FlightStatusSearch/FlightStatus" },
 ];
 
 export default function SiteHeader() {

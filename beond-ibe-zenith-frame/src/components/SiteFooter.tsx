@@ -6,37 +6,37 @@ const socialIcons: Array<{ label: string; href: string; src: string }> = [
   {
     label: "Facebook",
     href: "https://facebook.com/flybeond",
-    src: "https://edge.sitecorecloud.io/arabesquefl5949-beondibe-ibeprod-b667/media/Project/flight-booking/flight-booking/Social-Media/facebook_svg.svg",
+    src: "/facebook_svg.svg",
   },
   {
     label: "Instagram",
     href: "https://instagram.com/flybeond",
-    src: "https://edge.sitecorecloud.io/arabesquefl5949-beondibe-ibeprod-b667/media/Project/flight-booking/flight-booking/Social-Media/instagram_svg.svg",
+    src: "/instagram_svg.svg",
   },
   {
     label: "LinkedIn",
     href: "https://linkedin.com/company/flybeond/",
-    src: "https://edge.sitecorecloud.io/arabesquefl5949-beondibe-ibeprod-b667/media/Project/flight-booking/flight-booking/Social-Media/linkedin_svg.svg",
+    src: "/linkedin_svg.svg",
   },
   {
     label: "Snapchat",
     href: "https://www.snapchat.com/add/fly-beond",
-    src: "https://edge.sitecorecloud.io/arabesquefl5949-beondibe-ibeprod-b667/media/Project/flight-booking/flight-booking/Social-Media/snapchat_svg.svg",
+    src: "/snapchat_svg.svg",
   },
   {
     label: "TikTok",
     href: "http://www.tiktok.com/@flybeond",
-    src: "https://edge.sitecorecloud.io/arabesquefl5949-beondibe-ibeprod-b667/media/Project/flight-booking/flight-booking/Social-Media/tiktok_svg.svg",
+    src: "/tiktok_svg.svg",
   },
   {
     label: "X",
     href: "https://twitter.com/BeondAirlines",
-    src: "https://edge.sitecorecloud.io/arabesquefl5949-beondibe-ibeprod-b667/media/Project/flight-booking/flight-booking/Social-Media/x_logo_svg.svg",
+    src: "/x_logo_svg.svg",
   },
   {
     label: "YouTube",
     href: "http://www.youtube.com/@flybeond",
-    src: "https://edge.sitecorecloud.io/arabesquefl5949-beondibe-ibeprod-b667/media/Project/flight-booking/flight-booking/Social-Media/youtube_svg.svg",
+    src: "/youtube_svg.svg",
   },
 ];
 
@@ -45,42 +45,19 @@ const footerColumns: Array<{
   links: Array<{ label: string; href: string }>;
 }> = [
   {
-    heading: "Experience",
+    heading: "Manage Booking",
     links: [
-      { label: "Experience", href: "https://flybeond.com/en/experience" },
-      { label: "Offers", href: "https://flybeond.com/en/offers" },
       {
-        label: "Business Class Flights",
-        href: "https://flybeond.com/en/business-class-flights",
-      },
-    ],
-  },
-  {
-    heading: "Destinations",
-    links: [
-      { label: "Destinations", href: "https://flybeond.com/en/destinations" },
-    ],
-  },
-  {
-    heading: "Policies",
-    links: [
-      { label: "Privacy Policy", href: "https://flybeond.com/en/privacypolicy" },
-      {
-        label: "Terms and conditions",
-        href: "https://flybeond.com/en/TermsAndConditions",
+        label: "Manage Booking",
+        href: "https://fo-emea.ttinteractive.com/Zenith/FrontOffice/beond/en-GB/Home/FindBooking",
       },
       {
-        label: "Cookie Policy",
-        href: "https://edge.sitecorecloud.io/arabesquefl5949-beondibe-ibeprod-b667/media/Project/flight-booking/flight-booking/Legal-Docs/Cookie-Policy.pdf",
-      },
-      { label: "Imprint", href: "https://flybeond.com/en/Imprint" },
-      {
-        label: "Conditions of carriage",
-        href: "https://edge.sitecorecloud.io/arabesquefl5949-beondibe-ibeprod-b667/media/Project/flight-booking/flight-booking/Legal-Docs/CoC_Beond_MS_080823_v2.pdf",
+        label: "Check In",
+        href: "https://fo-emea.ttinteractive.com/zenith/frontoffice/beond/en-GB/Home/FindBooking?mode=webchecking",
       },
       {
-        label: "Notice of passenger rights",
-        href: "https://flybeond.com/Noticeofpassengerrights",
+        label: "Flight Status",
+        href: "https://fo-emea.ttinteractive.com/Zenith/FrontOffice/beond/en-GB/FlightStatusSearch/FlightStatus",
       },
     ],
   },
@@ -125,11 +102,11 @@ export default function SiteFooter() {
             </div>
           </div>
 
-          <div className="md:col-span-6 grid grid-cols-1 sm:grid-cols-3 gap-10">
+          <div className="md:col-span-6 grid grid-cols-1 gap-10">
             {footerColumns.map((col) => (
               <div key={col.heading} className="flex flex-col gap-4">
-                <div className="text-sm font-semibold">{col.heading}</div>
-                <div className="flex flex-col gap-3 text-sm text-white/80">
+                
+                <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-white/80">
                   {col.links.map((l) => (
                     <a
                       key={l.href}
@@ -146,7 +123,7 @@ export default function SiteFooter() {
             ))}
           </div>
 
-          <div className="flex flex-col gap-4 md:col-span-3">
+          {/*<div className="flex flex-col gap-4 md:col-span-3">
             <div className="text-sm font-semibold">Sign up for our newsletter</div>
             <p className="text-sm text-white/80 leading-relaxed">
               Stay up to date with offers and announcements.
@@ -173,15 +150,12 @@ export default function SiteFooter() {
             <div className="text-xs text-white/60">
               By subscribing, you agree to receive marketing emails.
             </div>
-          </div>
+          </div>*/}
         </div>
 
-        <div className="mt-10 pt-8 border-t border-white/10 flex flex-col md:flex-row gap-4 md:items-center md:justify-between">
-          <div className="text-xs text-white/60">
+        <div className="mt-10 pt-8 border-t border-white/10 flex flex-col md:flex-row gap-4 items-end md:items-center md:justify-end">
+          <div className="text-xs text-white/60 text-right">
             © {year} BeOnd Aivation DWC LLC
-          </div>
-          <div className="text-xs text-white/60">
-            Designed for a premium leisure travel experience.
           </div>
         </div>
       </div>
