@@ -1,7 +1,7 @@
 import React from "react";
 
 const DEFAULT_DESKTOP_VIDEO_ID = "1005712484";
-const DEFAULT_MOBILE_VIDEO_ID = "1127857029";
+const DEFAULT_MOBILE_VIDEO_ID = "1005712484";//"1127857029";
 
 export type VimeoVideoBannerProps = {
   /** Desktop Vimeo video id (default: 1005712484). */
@@ -65,7 +65,7 @@ export default function VimeoVideoBanner({
 
   return (
     <div
-      className={`relative bg-center bg-cover p-0 pt-[100%] md:pt-[56.2%] w-full max-md:left-1/2 max-md:w-screen max-md:max-w-none max-md:-translate-x-1/2 md:left-auto md:w-full md:translate-x-0 ${className}`.trim()}
+      className={`relative bg-center bg-cover p-0 pt-[56.2%] md:pt-[56.2%] w-full max-md:left-1/2 max-md:w-screen max-md:max-w-none max-md:-translate-x-1/2 md:left-auto md:w-full md:translate-x-0 ${className}`.trim()}
       style={
         posterUrl
           ? { backgroundImage: `url(${JSON.stringify(posterUrl)})` }

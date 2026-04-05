@@ -7,8 +7,11 @@ import {
 } from "@/lib/embedDocumentHeight";
 
 type ZenithSearchFrameProps = {
-  /** Tighter padding when floated over the video hero. */
-  variant?: "default" | "hero";
+  /**
+   * `hero` — compact padding over the video (desktop).
+   * `home` — stacked mobile (px + bottom space) and hero-style desktop (matches `hero`).
+   */
+  variant?: "default" | "hero" | "home";
   className?: string;
   /** Called after iframe height is synced (e.g. parent can reserve layout space on mobile). */
   onIframeGeometryChange?: () => void;
@@ -163,13 +166,22 @@ export default function ZenithSearchFrame({
   }, [clearRetryTimers]);
 
   const sectionPad =
-    variant === "hero" ? "py-4 md:py-6" : "py-10";
-  const sectionX = variant === "hero" ? "px-0" : "px-4";
+    variant === "hero"
+      ? "py-4 md:py-6"
+      : variant === "home"
+        ? "pt-0 pb-10 md:py-4 md:pb-6"
+        : "py-10";
+  const sectionX =
+    variant === "hero"
+      ? "px-0"
+      : variant === "home"
+        ? "px-0"
+        : "px-4";
 
   return (
     <section
       id="SearchCriterias"
-      className={`w-full ${sectionX} ${sectionPad} flex justify-center ${className}`.trim()}
+      className={`scroll-mt-20 w-full ${sectionX} ${sectionPad} flex justify-center ${className}`.trim()}
       aria-label="Flight search"
     >
       <iframe
@@ -178,7 +190,11 @@ export default function ZenithSearchFrame({
         src="/zenith-search-embed"
         onLoad={onIframeLoad}
         className={`w-full min-h-[80px] rounded-2xl border border-black/5 bg-(--color-background) ${
-          variant === "hero" ? "shadow-lg" : "shadow-sm"
+          variant === "hero"
+            ? "shadow-lg"
+            : variant === "home"
+              ? "shadow-sm md:shadow-lg"
+              : "shadow-sm"
         }`}
       />
     </section>
