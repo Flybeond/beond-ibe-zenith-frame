@@ -7,5 +7,5 @@ export const metadata: Metadata = {
 };
 
 export default function ZenithSearchEmbedPage() {
-  return <ZenithSearch />;
+  return <ZenithSearch deferSearchSubmitToParent />;
 }

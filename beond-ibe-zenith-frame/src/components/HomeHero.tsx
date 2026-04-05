@@ -1,6 +1,6 @@
 import BookNowScrollToSearch from "./BookNowScrollToSearch";
 import VimeoVideoBanner from "./VimeoVideoBanner";
-import ZenithSearchFrame from "./ZenithSearchFrame";
+import HomeHeroZenithSearch from "./HomeHeroZenithSearch";
 
 export default function HomeHero() {
   return (
@@ -38,7 +38,7 @@ export default function HomeHero() {
       */}
       <div className="relative z-10 bg-(--color-background) md:pointer-events-none md:absolute md:inset-x-0 md:bottom-0 md:z-10 md:bg-transparent md:pb-8">
         <div className="site-container md:pointer-events-auto">
-          <ZenithSearchFrame variant="home" />
+          <HomeHeroZenithSearch />
         </div>
       </div>
     </div>

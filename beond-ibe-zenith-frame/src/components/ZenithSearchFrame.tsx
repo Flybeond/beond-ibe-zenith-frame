@@ -5,6 +5,12 @@ import {
   isZenithEmbedHeightMessage,
   measureEmbedDocumentHeight,
 } from "@/lib/embedDocumentHeight";
+import {
+  isAllowedZenithTopNavUrl,
+  isZenithEmbedSearchSubmitMessage,
+  isZenithEmbedTopNavMessage,
+  type ZenithSearchSubmitDetail,
+} from "@/lib/zenithNavHost";
 
 type ZenithSearchFrameProps = {
   /**
@@ -15,6 +21,12 @@ type ZenithSearchFrameProps = {
   className?: string;
   /** Called after iframe height is synced (e.g. parent can reserve layout space on mobile). */
   onIframeGeometryChange?: () => void;
+  /**
+   * When the user submits a Zenith form that posts to FrontOffice, the embed sends
+   * `action`, `method`, and string `params` here so you can redirect or log on the host page.
+   * (Only fires for native form submit to `fo-emea.ttinteractive.com`.)
+   */
+  onSearchSubmit?: (detail: ZenithSearchSubmitDetail) => void;
 };
 
 function readEmbedContentHeight(doc: Document): number {
@@ -25,8 +37,17 @@ export default function ZenithSearchFrame({
   variant = "default",
   className = "",
   onIframeGeometryChange,
+  onSearchSubmit,
 }: ZenithSearchFrameProps) {
   const iframeRef = useRef<HTMLIFrameElement>(null);
+  const onSearchSubmitRef = useRef(onSearchSubmit);
+  onSearchSubmitRef.current = onSearchSubmit;
+
+  useEffect(() => {
+    console.log(
+      "[ZenithSearchFrame] Host page: listening for iframe postMessage (height + search-submit).",
+    );
+  }, []);
   const resizeObserverRef = useRef<ResizeObserver | null>(null);
   const mutationObserverRef = useRef<MutationObserver | null>(null);
   const mountResizeObserverRef = useRef<ResizeObserver | null>(null);
@@ -141,6 +162,23 @@ export default function ZenithSearchFrame({
       if (e.origin !== window.location.origin) return;
       const iframe = iframeRef.current;
       if (!iframe || e.source !== iframe.contentWindow) return;
+
+      if (isZenithEmbedTopNavMessage(e.data)) {
+        if (!isAllowedZenithTopNavUrl(e.data.url)) return;
+        window.location.assign(e.data.url);
+        return;
+      }
+
+      if (isZenithEmbedSearchSubmitMessage(e.data)) {
+        console.log("[ZenithSearchFrame] received search-submit", e.data);
+        onSearchSubmitRef.current?.({
+          action: e.data.action,
+          method: e.data.method,
+          params: e.data.params,
+        });
+        return;
+      }
+
       if (!isZenithEmbedHeightMessage(e.data)) return;
       const h = Math.max(1, Math.ceil(e.data.height));
       iframe.style.height = `${h}px`;
@@ -200,3 +238,5 @@ export default function ZenithSearchFrame({
     </section>
   );
 }
+
+export type { ZenithSearchSubmitDetail } from "@/lib/zenithNavHost";

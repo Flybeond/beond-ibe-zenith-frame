@@ -6,6 +6,14 @@ import {
   ZENITH_EMBED_HEIGHT_MSG,
   measureEmbedDocumentHeight,
 } from "@/lib/embedDocumentHeight";
+import {
+  ZENITH_FRAME_BLOCKED_ORIGIN,
+  formToSearchParamRecord,
+  isZenithFrameBlockedUrl,
+  postZenithSearchSubmitToParent,
+  postZenithTopNavToParent,
+  resolveZenithFormActionUrl,
+} from "@/lib/zenithNavHost";
 
 type ZenithSearchConfig = {
   baseUrl: string;
@@ -73,7 +81,15 @@ function runModule(code: string) {
   });
 }
 
-export default function ZenithSearch(props: { config?: Partial<ZenithSearchConfig> }) {
+export default function ZenithSearch(props: {
+  config?: Partial<ZenithSearchConfig>;
+  /**
+   * When embedded in our iframe: block the default form submit and only notify the parent.
+   * The host page should redirect (e.g. to BookingEngine SearchResult) using `onSearchSubmit`.
+   */
+  deferSearchSubmitToParent?: boolean;
+}) {
+  const { deferSearchSubmitToParent = false } = props;
   const config = useMemo(
     () => ({ ...DEFAULT_CONFIG, ...(props.config ?? {}) }),
     [props.config]
@@ -112,6 +128,199 @@ export default function ZenithSearch(props: { config?: Partial<ZenithSearchConfi
         console.error("ZenithSearch init failed", err);
       });
     }
+  }, []);
+
+  /**
+   * Intercept programmatic navigations (location.assign / href = …) to FrontOffice and
+   * hand off to the parent window via postMessage (avoids X-Frame-Options in the iframe).
+   */
+  useEffect(() => {
+    if (typeof window === "undefined" || window.parent === window) return;
+
+    const loc = window.location;
+
+    const tryBreakout = (raw: string | URL): boolean => {
+      const s = typeof raw === "string" ? raw : raw.href;
+      const baseHref = window.location.href;
+      let resolved: string;
+      try {
+        resolved = new URL(s, baseHref).href;
+      } catch {
+        return false;
+      }
+      if (!isZenithFrameBlockedUrl(resolved, baseHref)) return false;
+      postZenithTopNavToParent(resolved);
+      return true;
+    };
+
+    let savedAssign: typeof loc.assign | undefined;
+    let savedReplace: typeof loc.replace | undefined;
+    if (typeof loc.assign === "function" && typeof loc.replace === "function") {
+      const assignBound = loc.assign.bind(loc);
+      const replaceBound = loc.replace.bind(loc);
+      savedAssign = assignBound;
+      savedReplace = replaceBound;
+      try {
+        (loc as unknown as { assign: typeof loc.assign }).assign = function (
+          url: string | URL,
+        ) {
+          if (tryBreakout(url)) return;
+          assignBound(typeof url === "string" ? url : url.href);
+        };
+        (loc as unknown as { replace: typeof loc.replace }).replace =
+          function (url: string | URL) {
+            if (tryBreakout(url)) return;
+            replaceBound(typeof url === "string" ? url : url.href);
+          };
+      } catch {
+        /* some engines keep assign/replace non-writable */
+        savedAssign = undefined;
+        savedReplace = undefined;
+      }
+    }
+
+    const proto = Location.prototype;
+    const hrefDesc = Object.getOwnPropertyDescriptor(proto, "href");
+    let hrefPatched = false;
+    if (hrefDesc?.set && hrefDesc.get && hrefDesc.configurable !== false) {
+      try {
+        const origSet = hrefDesc.set;
+        Object.defineProperty(proto, "href", {
+          configurable: true,
+          enumerable: hrefDesc.enumerable,
+          get: hrefDesc.get,
+          set(value: string) {
+            if (tryBreakout(value)) return;
+            origSet.call(this, value);
+          },
+        });
+        hrefPatched = true;
+      } catch {
+        /* ignore */
+      }
+    }
+
+    return () => {
+      if (savedAssign && savedReplace) {
+        try {
+          (loc as unknown as { assign: typeof savedAssign }).assign =
+            savedAssign;
+          (loc as unknown as { replace: typeof savedReplace }).replace =
+            savedReplace;
+        } catch {
+          /* ignore */
+        }
+      }
+      if (hrefPatched && hrefDesc) {
+        try {
+          Object.defineProperty(proto, "href", hrefDesc);
+        } catch {
+          /* ignore */
+        }
+      }
+    };
+  }, []);
+
+  /** Confirms embed JS ran; use iframe context in DevTools to see this. */
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    console.log("[Zenith embed] ZenithSearch mounted", {
+      href: window.location.href,
+      inIframe: window.parent !== window,
+    });
+  }, []);
+
+  /**
+   * Form submit: always listen (embed page). Parent-handoff only when in iframe.
+   * Uses window capture so we still see submits from Shadow DOM / unusual trees.
+   */
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const baseHref = window.location.href;
+
+    const submitSeen = new WeakSet<SubmitEvent>();
+    const onSubmitCapturing = (e: Event) => {
+      if (!(e instanceof SubmitEvent)) return;
+      if (submitSeen.has(e)) return;
+      submitSeen.add(e);
+
+      const form = e.target;
+      if (!(form instanceof HTMLFormElement)) return;
+      console.log("[Zenith embed] submit event", {
+        actionAttr: form.getAttribute("action"),
+        method: form.method,
+        inIframe: window.parent !== window,
+      });
+
+      const actionUrl = resolveZenithFormActionUrl(form, baseHref);
+      if (!actionUrl || actionUrl.origin !== ZENITH_FRAME_BLOCKED_ORIGIN) {
+        console.log("[Zenith embed] form submit not handled (action not FrontOffice)", {
+          actionAttr: form.getAttribute("action"),
+          resolvedHref: actionUrl?.href ?? null,
+        });
+        return;
+      }
+
+      const detail = {
+        action: actionUrl.href,
+        method: (form.method || "GET").toUpperCase(),
+        params: formToSearchParamRecord(form),
+      };
+
+      console.log("[Zenith embed] FrontOffice form submit", detail);
+
+      if (deferSearchSubmitToParent && window.parent !== window) {
+        e.preventDefault();
+        postZenithSearchSubmitToParent(detail);
+        return;
+      }
+
+      if (window.parent !== window) {
+        postZenithSearchSubmitToParent(detail);
+        form.target = "_top";
+      }
+    };
+
+    window.addEventListener("submit", onSubmitCapturing, true);
+    document.addEventListener("submit", onSubmitCapturing, true);
+    return () => {
+      window.removeEventListener("submit", onSubmitCapturing, true);
+      document.removeEventListener("submit", onSubmitCapturing, true);
+    };
+  }, [deferSearchSubmitToParent]);
+
+  /**
+   * Zenith redirects to FrontOffice with X-Frame-Options: sameorigin — when embedded,
+   * intercept TTI links for top navigation.
+   */
+  useEffect(() => {
+    if (typeof window === "undefined" || window.parent === window) return;
+
+    const baseHref = window.location.href;
+
+    const onClickCapturing = (e: MouseEvent) => {
+      if (e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) {
+        return;
+      }
+      const el = (e.target as Element | null)?.closest?.("a[href]");
+      if (!el) return;
+      const a = el as HTMLAnchorElement;
+      if (a.hasAttribute("download")) return;
+      const href = a.getAttribute("href");
+      if (href == null || href === "" || href.startsWith("#")) return;
+      const t = (a.getAttribute("target") ?? "").toLowerCase();
+      if (t === "_blank") return;
+
+      if (!isZenithFrameBlockedUrl(href, baseHref)) return;
+
+      e.preventDefault();
+      e.stopPropagation();
+      postZenithTopNavToParent(new URL(href, baseHref).href);
+    };
+
+    document.addEventListener("click", onClickCapturing, true);
+    return () => document.removeEventListener("click", onClickCapturing, true);
   }, []);
 
   /** Report document height to parent iframe (authoritative for async Zenith mount / fonts). */
