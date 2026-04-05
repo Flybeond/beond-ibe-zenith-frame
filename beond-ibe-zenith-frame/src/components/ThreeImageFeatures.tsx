@@ -26,7 +26,7 @@ export const BEOND_THREE_IMAGE_FEATURES = {
         "Settle into spacious, modern cabins featuring luxuriously appointed business class style lie-flat seats crafted in fine Italian leather. Our highly trained crew caters to your every wish, while eco-friendly plush blankets and oversized pillows guarantee total comfort throughout your journey.",
     },
     {
-      src: "https://images.unsplash.com/photo-1540339832-7e01c72b9b93?w=900&h=675&fit=crop&q=80",
+      src: "/3images-2.webp",
       alt: "A culinary adventure at 30,000 feet",
       subtitle: "A culinary adventure at 30,000 feet",
       description:

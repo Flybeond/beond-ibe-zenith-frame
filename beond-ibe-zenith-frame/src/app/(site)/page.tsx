@@ -7,7 +7,8 @@ import ZenithSearchFrame from "../../components/ZenithSearchFrame";
 export default function Home() {
   return (
     <>
-    <div className="relative isolate w-full">
+    {/* Mobile: pb reserves space for Zenith iframe — absolute overlay does not affect layout height, so a tall iframe was overlapping ThreeImageFeatures. */}
+    <div className="relative isolate w-full max-md:pb-[clamp(22rem,88vw,36rem)] md:pb-0">
       <VimeoVideoBanner className="w-full" />
       <div className="pointer-events-none absolute inset-0 z-10 flex flex-col pt-32 md:pt-20 pb-1 md:pb-8">
         <div className="site-container pointer-events-auto flex min-h-0 flex-1 flex-col">
