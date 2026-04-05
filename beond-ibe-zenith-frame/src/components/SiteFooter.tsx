@@ -1,6 +1,9 @@
 import React from "react";
+import { ExternalLinkIcon } from "./ExternalLinkIcon";
 
 const logoUrl = "/companylogo-white.png";
+
+const BEOND_HOLIDAYS_URL = "https://holidays.flybeond.com/";
 
 const socialIcons: Array<{ label: string; href: string; src: string }> = [
   {
@@ -42,7 +45,7 @@ const socialIcons: Array<{ label: string; href: string; src: string }> = [
 
 const footerColumns: Array<{
   heading: string;
-  links: Array<{ label: string; href: string }>;
+  links: Array<{ label: string; href: string; externalIcon?: boolean }>;
 }> = [
   {
     heading: "Manage Booking",
@@ -58,6 +61,11 @@ const footerColumns: Array<{
       {
         label: "Flight Status",
         href: "https://fo-emea.ttinteractive.com/Zenith/FrontOffice/beond/en-GB/FlightStatusSearch/FlightStatus",
+      },
+      {
+        label: "beOnd Holidays",
+        href: BEOND_HOLIDAYS_URL,
+        externalIcon: true,
       },
     ],
   },
@@ -112,10 +120,22 @@ export default function SiteFooter() {
                       key={l.href}
                       href={l.href}
                       target={l.href.startsWith("http") ? "_blank" : undefined}
-                      rel="noreferrer"
-                      className="hover:text-white hover:underline underline-offset-4 transition-colors"
+                      rel={
+                        l.href.startsWith("http")
+                          ? "noopener noreferrer"
+                          : undefined
+                      }
+                      className="inline-flex items-center gap-1.5 hover:text-white hover:underline underline-offset-4 transition-colors"
+                      aria-label={
+                        l.externalIcon
+                          ? `${l.label} (opens external site in a new tab)`
+                          : undefined
+                      }
                     >
                       {l.label}
+                      {l.externalIcon ? (
+                        <ExternalLinkIcon className="size-3.5 opacity-80" />
+                      ) : null}
                     </a>
                   ))}
                 </div>

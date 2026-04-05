@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Geist_Mono, Lato } from "next/font/google";
-import "../globals.css";
+import "../../globals.css";
 
 const lato = Lato({
   weight: ["300", "400", "700", "900"],
@@ -34,4 +34,3 @@ export default function HeaderOnlyLayout({
     </html>
   );
 }
-

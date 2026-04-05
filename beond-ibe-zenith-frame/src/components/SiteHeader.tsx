@@ -1,11 +1,32 @@
 import React from "react";
+import { ExternalLinkIcon } from "./ExternalLinkIcon";
 
 const logoUrl = "/companylogo-dark.png";
 
-const navItems: Array<{ label: string; href: string }> = [
-  { label: "Manage Booking", href: "https://fo-emea.ttinteractive.com/Zenith/FrontOffice/beond/en-GB/Home/FindBooking" },
-  { label: "Check In", href: "https://fo-emea.ttinteractive.com/zenith/frontoffice/beond/en-GB/Home/FindBooking?mode=webchecking" },
-  { label: "Flight Status", href: "https://fo-emea.ttinteractive.com/Zenith/FrontOffice/beond/en-GB/FlightStatusSearch/FlightStatus" },
+const BEOND_HOLIDAYS_URL = "https://holidays.flybeond.com/";
+
+const navItems: Array<{
+  label: string;
+  href: string;
+  openInNewTab?: boolean;
+}> = [
+  {
+    label: "Manage Booking",
+    href: "https://fo-emea.ttinteractive.com/Zenith/FrontOffice/beond/en-GB/Home/FindBooking",
+  },
+  {
+    label: "Check In",
+    href: "https://fo-emea.ttinteractive.com/zenith/frontoffice/beond/en-GB/Home/FindBooking?mode=webchecking",
+  },
+  {
+    label: "Flight Status",
+    href: "https://fo-emea.ttinteractive.com/Zenith/FrontOffice/beond/en-GB/FlightStatusSearch/FlightStatus",
+  },
+  {
+    label: "beOnd Holidays",
+    href: BEOND_HOLIDAYS_URL,
+    openInNewTab: true,
+  },
 ];
 
 export default function SiteHeader() {
@@ -31,9 +52,19 @@ export default function SiteHeader() {
               <a
                 key={item.href}
                 href={item.href}
-                className="hover:underline underline-offset-4"
+                target={item.openInNewTab ? "_blank" : undefined}
+                rel={item.openInNewTab ? "noopener noreferrer" : undefined}
+                className="inline-flex items-center gap-1.5 hover:underline underline-offset-4"
+                aria-label={
+                  item.openInNewTab
+                    ? `${item.label} (opens external site in a new tab)`
+                    : undefined
+                }
               >
                 {item.label}
+                {item.openInNewTab ? (
+                  <ExternalLinkIcon className="size-3.5 opacity-70" />
+                ) : null}
               </a>
             ))}
           </nav>
@@ -58,9 +89,19 @@ export default function SiteHeader() {
                     <a
                       key={item.href}
                       href={item.href}
-                      className="hover:underline underline-offset-4"
+                      target={item.openInNewTab ? "_blank" : undefined}
+                      rel={item.openInNewTab ? "noopener noreferrer" : undefined}
+                      className="inline-flex items-center gap-1.5 hover:underline underline-offset-4"
+                      aria-label={
+                        item.openInNewTab
+                          ? `${item.label} (opens external site in a new tab)`
+                          : undefined
+                      }
                     >
                       {item.label}
+                      {item.openInNewTab ? (
+                        <ExternalLinkIcon className="size-3.5 opacity-70" />
+                      ) : null}
                     </a>
                   ))}
                   <a
