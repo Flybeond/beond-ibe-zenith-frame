@@ -38,14 +38,14 @@ export default function SiteHeader() {
             ))}
           </nav>
 
-          <div className="hidden md:flex items-center">
+          {/*<div className="hidden md:flex items-center">
             <a
               href="#SearchCriterias"
               className="rounded-full border border-black/15 px-5 py-2 text-sm font-semibold hover:bg-(--color-foreground) hover:text-(--color-background) transition-colors"
             >
               Book
             </a>
-          </div>
+          </div>*/}
 
           <div className="md:hidden">
             <details className="relative">
