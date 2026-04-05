@@ -39,6 +39,11 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+/* Shared content width with header/footer (Tailwind max-w-6xl + horizontal padding). */
+.site-container {
+  @apply w-full max-w-6xl mx-auto px-4;
+}
+
 .container {
   margin: 0 auto;
   padding: 0 15px;

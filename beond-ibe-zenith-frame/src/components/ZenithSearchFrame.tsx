@@ -2,7 +2,16 @@
 
 import { useCallback, useEffect, useRef } from "react";
 
-export default function ZenithSearchFrame() {
+type ZenithSearchFrameProps = {
+  /** Tighter padding when floated over the video hero. */
+  variant?: "default" | "hero";
+  className?: string;
+};
+
+export default function ZenithSearchFrame({
+  variant = "default",
+  className = "",
+}: ZenithSearchFrameProps) {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const resizeObserverRef = useRef<ResizeObserver | null>(null);
   const rafRef = useRef<number | null>(null);
@@ -57,10 +66,14 @@ export default function ZenithSearchFrame() {
     };
   }, []);
 
+  const sectionPad =
+    variant === "hero" ? "py-4 md:py-6" : "py-10";
+  const sectionX = variant === "hero" ? "px-0" : "px-4";
+
   return (
     <section
       id="SearchCriterias"
-      className="w-full px-4 py-10 flex justify-center"
+      className={`w-full ${sectionX} ${sectionPad} flex justify-center ${className}`.trim()}
       aria-label="Flight search"
     >
       <iframe
@@ -68,7 +81,9 @@ export default function ZenithSearchFrame() {
         title="Flight search"
         src="/zenith-search-embed"
         onLoad={onIframeLoad}
-        className="w-full max-w-5xl min-h-[80px] rounded-2xl border border-black/5 bg-(--color-background) shadow-sm"
+        className={`w-full min-h-[80px] rounded-2xl border border-black/5 bg-(--color-background) ${
+          variant === "hero" ? "shadow-lg" : "shadow-sm"
+        }`}
       />
     </section>
   );

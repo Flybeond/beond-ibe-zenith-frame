@@ -11,7 +11,7 @@ const navItems: Array<{ label: string; href: string }> = [
 export default function SiteHeader() {
   return (
     <header className="sticky top-0 z-50 w-full bg-(--color-background) text-(--color-foreground) border-b border-black/5 shadow-md">
-      <div className="max-w-6xl mx-auto px-4" >
+      <div className="site-container">
         <div className="h-16 flex items-center justify-between gap-4">
           <a
             href="https://flybeond.com/"
