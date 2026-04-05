@@ -250,6 +250,132 @@ export default function ZenithSearch(props: {
   }, []);
 
   /**
+   * Zenith currency (and similar) often sets `window.top.location` / `parent.location`.
+   * That bypasses `<base>` and `form.target`. Same-origin `/zenith-search-embed` must load
+   * inside this iframe, not replace the host page. (Iframe sandbox also blocks top nav.)
+   */
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const topW = window.top;
+    if (!topW || topW === window) return;
+    try {
+      if (topW.location.origin !== window.location.origin) return;
+    } catch {
+      return;
+    }
+
+    const topLoc = topW.location;
+    const topOrigin = topW.location.origin;
+
+    const tryRerouteTopNavToIframe = (
+      raw: string | URL,
+      mode: "assign" | "replace",
+    ): boolean => {
+      let resolved: string;
+      try {
+        resolved =
+          typeof raw === "string" ? new URL(raw, topLoc.href).href : raw.href;
+      } catch {
+        return false;
+      }
+      if (!isSameOriginZenithSearchEmbedUrl(resolved, topOrigin)) return false;
+      if (mode === "replace") window.location.replace(resolved);
+      else window.location.assign(resolved);
+      return true;
+    };
+
+    const assignDesc = Object.getOwnPropertyDescriptor(
+      Location.prototype,
+      "assign",
+    );
+    const replaceDesc = Object.getOwnPropertyDescriptor(
+      Location.prototype,
+      "replace",
+    );
+    const nativeAssign = assignDesc?.value as
+      | ((this: Location, url: string | URL) => void)
+      | undefined;
+    const nativeReplace = replaceDesc?.value as
+      | ((this: Location, url: string | URL) => void)
+      | undefined;
+    if (!nativeAssign || !nativeReplace) return;
+
+    let patchedAssign = false;
+    let patchedReplace = false;
+    try {
+      (topLoc as unknown as { assign: typeof nativeAssign }).assign = function (
+        this: Location,
+        url: string | URL,
+      ) {
+        if (tryRerouteTopNavToIframe(url, "assign")) return;
+        nativeAssign.call(this, url);
+      };
+      patchedAssign = true;
+    } catch {
+      /* non-writable */
+    }
+    try {
+      (topLoc as unknown as { replace: typeof nativeReplace }).replace =
+        function (this: Location, url: string | URL) {
+          if (tryRerouteTopNavToIframe(url, "replace")) return;
+          nativeReplace.call(this, url);
+        };
+      patchedReplace = true;
+    } catch {
+      /* non-writable */
+    }
+
+    const hrefDesc = Object.getOwnPropertyDescriptor(Location.prototype, "href");
+    let hrefPatched = false;
+    if (hrefDesc?.set && hrefDesc.get) {
+      try {
+        const origSet = hrefDesc.set;
+        const origGet = hrefDesc.get;
+        Object.defineProperty(topLoc, "href", {
+          configurable: true,
+          enumerable: hrefDesc.enumerable,
+          get() {
+            return origGet.call(topLoc);
+          },
+          set(value: string) {
+            if (tryRerouteTopNavToIframe(value, "assign")) return;
+            origSet.call(topLoc, value);
+          },
+        });
+        hrefPatched = true;
+      } catch {
+        /* many engines forbid overriding location.href on the instance */
+      }
+    }
+
+    return () => {
+      try {
+        if (patchedAssign && assignDesc?.value) {
+          (topLoc as unknown as { assign: typeof nativeAssign }).assign =
+            assignDesc.value as typeof nativeAssign;
+        }
+      } catch {
+        /* ignore */
+      }
+      try {
+        if (patchedReplace && replaceDesc?.value) {
+          (topLoc as unknown as { replace: typeof nativeReplace }).replace =
+            replaceDesc.value as typeof nativeReplace;
+        }
+      } catch {
+        /* ignore */
+      }
+      if (hrefPatched && hrefDesc) {
+        try {
+          Object.defineProperty(topLoc, "href", hrefDesc);
+        } catch {
+          /* ignore */
+        }
+      }
+    };
+  }, []);
+
+  /**
    * Zenith calls `form.submit()` programmatically — that does NOT fire `submit` events.
    * Intercept here and send the same URL the iframe would navigate to (GET: full query).
    */
