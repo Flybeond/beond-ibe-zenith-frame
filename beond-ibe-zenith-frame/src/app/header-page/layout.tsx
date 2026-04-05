@@ -26,7 +26,7 @@ export default function HeaderOnlyLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full bg-(--color-surface-2) text-(--color-foreground)">
+      <body className="min-h-full bg-white text-(--color-foreground)">
         {children}
       </body>
     </html>
