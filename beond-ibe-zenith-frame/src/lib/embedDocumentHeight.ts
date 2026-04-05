@@ -7,8 +7,12 @@ export type ZenithEmbedHeightPayload = {
 };
 
 /**
- * Height of embed document content. Uses scroll metrics plus max descendant
- * bottom so absolutely positioned Zenith UI still increases the needed iframe height.
+ * Height of embed document for sizing the parent iframe.
+ *
+ * Uses scroll/layout metrics on `html`, `body`, and `#SearchCriterias` only.
+ * We intentionally do **not** walk all descendants: open selects/date pickers often
+ * use large absolutely positioned layers; their `getBoundingClientRect().bottom`
+ * would blow up the iframe past the viewport.
  */
 export function measureEmbedDocumentHeight(doc: Document): number {
   const html = doc.documentElement;
@@ -30,14 +34,6 @@ export function measureEmbedDocumentHeight(doc: Document): number {
       mount.offsetHeight,
       Math.ceil(mount.getBoundingClientRect().height),
     );
-    const win = doc.defaultView;
-    const scrollY = win?.scrollY ?? 0;
-    const stack: Element[] = [mount];
-    while (stack.length) {
-      const el = stack.pop()!;
-      max = Math.max(max, Math.ceil(el.getBoundingClientRect().bottom + scrollY));
-      stack.push(...el.children);
-    }
   }
 
   return Math.max(1, max);

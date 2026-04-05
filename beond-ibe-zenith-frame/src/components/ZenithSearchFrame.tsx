@@ -189,7 +189,7 @@ export default function ZenithSearchFrame({
         title="Flight search"
         src="/zenith-search-embed"
         onLoad={onIframeLoad}
-        className={`w-full min-h-[80px] rounded-2xl border-0 bg-(--color-background) md:border md:border-black/5 ${
+        className={`w-full min-h-[80px] max-md:max-h-[min(88dvh,40rem)] rounded-2xl border-0 bg-(--color-background) md:border md:border-black/5 ${
           variant === "hero"
             ? "shadow-none md:shadow-lg"
             : variant === "home"
