@@ -167,10 +167,10 @@ export default function ZenithSearchFrame({
 
   const sectionPad =
     variant === "hero"
-      ? "py-4 md:py-6"
+      ? "py-3 md:py-6"
       : variant === "home"
-        ? "pt-0 pb-10 md:py-4 md:pb-6"
-        : "py-10";
+        ? "pt-0 pb-6 md:py-4 md:pb-6"
+        : "pt-10 pb-6 md:py-10";
   const sectionX =
     variant === "hero"
       ? "px-0"
@@ -189,12 +189,12 @@ export default function ZenithSearchFrame({
         title="Flight search"
         src="/zenith-search-embed"
         onLoad={onIframeLoad}
-        className={`w-full min-h-[80px] rounded-2xl border border-black/5 bg-(--color-background) ${
+        className={`w-full min-h-[80px] rounded-2xl border-0 bg-(--color-background) md:border md:border-black/5 ${
           variant === "hero"
-            ? "shadow-lg"
+            ? "shadow-none md:shadow-lg"
             : variant === "home"
-              ? "shadow-sm md:shadow-lg"
-              : "shadow-sm"
+              ? "shadow-none md:shadow-lg"
+              : "shadow-none md:shadow-sm"
         }`}
       />
     </section>

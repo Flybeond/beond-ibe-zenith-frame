@@ -28,7 +28,7 @@ export default function HomeHero() {
 
         {/* Mobile only: bottom of video banner; scrolls flight search into view */}
         <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 flex justify-center px-4 pb-6 md:hidden">
-          <BookNowScrollToSearch className="pointer-events-auto rounded-full border border-white/30 bg-white/95 px-8 py-3 text-sm font-semibold text-(--color-foreground) shadow-lg backdrop-blur-sm transition-colors hover:bg-white" />
+          <BookNowScrollToSearch className="pointer-events-auto rounded-full border-2 border-white bg-transparent px-8 py-3 text-sm font-semibold text-white [text-shadow:0_1px_8px_rgba(0,0,0,0.5)] transition-colors hover:bg-white/15" />
         </div>
       </div>
 
