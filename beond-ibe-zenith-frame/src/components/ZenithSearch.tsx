@@ -117,8 +117,8 @@ export default function ZenithSearch(props: { config?: Partial<ZenithSearchConfi
         input:focus-visible { outline: none; }
       `}</style>
 
-      <div className="w-full max-w-5xl">
-        <div className="rounded-2xl bg-(--color-background) shadow-sm border border-black/5 p-6 md:p-8">
+      <div className="">
+        <div className="">
 
 
           <div id="SearchCriterias" data-config={JSON.stringify(config)} />

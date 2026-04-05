@@ -1,5 +1,5 @@
-import ZenithSearch from "../../components/ZenithSearch";
+import ZenithSearchFrame from "../../components/ZenithSearchFrame";
 
 export default function Home() {
-  return <ZenithSearch />;
+  return <ZenithSearchFrame />;
 }
