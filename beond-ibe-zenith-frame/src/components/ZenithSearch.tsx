@@ -8,8 +8,12 @@ import {
 } from "@/lib/embedDocumentHeight";
 import {
   ZENITH_FRAME_BLOCKED_ORIGIN,
+  ZENITH_SEARCH_EMBED_PATH,
   buildZenithFrontOfficeGetFormUrl,
+  forceFormTargetSelfIfSameOriginZenithEmbed,
   formToSearchParamRecord,
+  isFoEmeaZenithSearchEmbedUrl,
+  isSameOriginZenithSearchEmbedUrl,
   isZenithFrameBlockedUrl,
   postZenithSearchSubmitToParent,
   postZenithTopNavToParent,
@@ -142,7 +146,15 @@ export default function ZenithSearch(props: {
 
     const loc = window.location;
 
-    const tryBreakout = (raw: string | URL): boolean => {
+    const assignBound =
+      typeof loc.assign === "function" ? loc.assign.bind(loc) : null;
+    const replaceBound =
+      typeof loc.replace === "function" ? loc.replace.bind(loc) : null;
+
+    const tryBreakout = (
+      raw: string | URL,
+      nav: "assign" | "replace",
+    ): boolean => {
       const s = typeof raw === "string" ? raw : raw.href;
       const baseHref = window.location.href;
       let resolved: string;
@@ -152,27 +164,40 @@ export default function ZenithSearch(props: {
         return false;
       }
       if (!isZenithFrameBlockedUrl(resolved, baseHref)) return false;
+
+      if (isFoEmeaZenithSearchEmbedUrl(resolved)) {
+        if (!assignBound || !replaceBound) return false;
+        try {
+          const u = new URL(resolved);
+          const local = `${window.location.origin}${ZENITH_SEARCH_EMBED_PATH}${u.search}`;
+          if (nav === "replace") replaceBound(local);
+          else assignBound(local);
+        } catch {
+          if (nav === "replace") replaceBound(resolved);
+          else assignBound(resolved);
+        }
+        return true;
+      }
+
       postZenithTopNavToParent(resolved);
       return true;
     };
 
     let savedAssign: typeof loc.assign | undefined;
     let savedReplace: typeof loc.replace | undefined;
-    if (typeof loc.assign === "function" && typeof loc.replace === "function") {
-      const assignBound = loc.assign.bind(loc);
-      const replaceBound = loc.replace.bind(loc);
+    if (assignBound && replaceBound) {
       savedAssign = assignBound;
       savedReplace = replaceBound;
       try {
         (loc as unknown as { assign: typeof loc.assign }).assign = function (
           url: string | URL,
         ) {
-          if (tryBreakout(url)) return;
+          if (tryBreakout(url, "assign")) return;
           assignBound(typeof url === "string" ? url : url.href);
         };
         (loc as unknown as { replace: typeof loc.replace }).replace =
           function (url: string | URL) {
-            if (tryBreakout(url)) return;
+            if (tryBreakout(url, "replace")) return;
             replaceBound(typeof url === "string" ? url : url.href);
           };
       } catch {
@@ -193,7 +218,7 @@ export default function ZenithSearch(props: {
           enumerable: hrefDesc.enumerable,
           get: hrefDesc.get,
           set(value: string) {
-            if (tryBreakout(value)) return;
+            if (tryBreakout(value, "assign")) return;
             origSet.call(this, value);
           },
         });
@@ -241,6 +266,7 @@ export default function ZenithSearch(props: {
       const pageBase = window.location.href;
       const actionUrl = resolveZenithFormActionUrl(this, pageBase);
       if (!actionUrl || actionUrl.origin !== ZENITH_FRAME_BLOCKED_ORIGIN) {
+        forceFormTargetSelfIfSameOriginZenithEmbed(this, pageBase);
         return origSubmit.call(this);
       }
 
@@ -490,6 +516,9 @@ export default function ZenithSearch(props: {
 
       const form = e.target;
       if (!(form instanceof HTMLFormElement)) return;
+      if (window.parent !== window) {
+        forceFormTargetSelfIfSameOriginZenithEmbed(form, window.location.href);
+      }
       console.log("[Zenith embed] submit event", {
         actionAttr: form.getAttribute("action"),
         method: form.method,
@@ -530,6 +559,12 @@ export default function ZenithSearch(props: {
       if (href == null || href === "" || href.startsWith("#")) return;
       const t = (a.getAttribute("target") ?? "").toLowerCase();
       if (t === "_blank") return;
+
+      const resolvedHref = new URL(href, baseHref).href;
+      if (isSameOriginZenithSearchEmbedUrl(resolvedHref, window.location.origin)) {
+        a.target = "_self";
+        return;
+      }
 
       if (!isZenithFrameBlockedUrl(href, baseHref)) return;
 

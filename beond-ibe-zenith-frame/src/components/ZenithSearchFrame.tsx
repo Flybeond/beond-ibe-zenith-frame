@@ -7,6 +7,8 @@ import {
 } from "@/lib/embedDocumentHeight";
 import {
   isAllowedZenithTopNavUrl,
+  isFoEmeaZenithSearchEmbedUrl,
+  isSameOriginZenithSearchEmbedUrl,
   isZenithEmbedSearchSubmitMessage,
   isZenithEmbedTopNavMessage,
   type ZenithSearchSubmitDetail,
@@ -164,6 +166,20 @@ export default function ZenithSearchFrame({
       if (!iframe || e.source !== iframe.contentWindow) return;
 
       if (isZenithEmbedTopNavMessage(e.data)) {
+        if (isSameOriginZenithSearchEmbedUrl(e.data.url, window.location.origin)) {
+          console.log(
+            "[ZenithSearchFrame] top-nav ignored (would assign host to zenith-search-embed)",
+            { url: e.data.url },
+          );
+          return;
+        }
+        if (isFoEmeaZenithSearchEmbedUrl(e.data.url)) {
+          console.log(
+            "[ZenithSearchFrame] top-nav ignored (fo-emea /zenith-search-embed — currency/embed refresh stays in iframe)",
+            { url: e.data.url },
+          );
+          return;
+        }
         if (!isAllowedZenithTopNavUrl(e.data.url)) return;
         console.log("[ZenithSearchFrame] top-nav (assign host to iframe target URL)", {
           url: e.data.url,

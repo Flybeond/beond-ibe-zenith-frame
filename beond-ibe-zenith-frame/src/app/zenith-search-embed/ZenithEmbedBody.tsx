@@ -12,7 +12,11 @@ export default function ZenithEmbedBody({
 }: {
   children: React.ReactNode;
 }) {
-  /** Default link/form target so Zenith navigations break out of the iframe when allowed by the spec. */
+  /**
+   * Default link/form target so TTI / FrontOffice navigations can break out of the iframe.
+   * Same-origin `/zenith-search-embed` submits are forced to `target="_self"` in ZenithSearch
+   * so currency and similar reloads stay inside the iframe (not the host window).
+   */
   useLayoutEffect(() => {
     if (document.querySelector("base[data-zenith-embed-default-target]")) return;
     const base = document.createElement("base");

@@ -46,9 +46,97 @@ export function isAllowedZenithTopNavUrl(url: string): boolean {
   }
 }
 
+/** Path of the Zenith search embed route on this app (no trailing slash). */
+export const ZENITH_SEARCH_EMBED_PATH = "/zenith-search-embed";
+
+/**
+ * True when `url` resolves to this app's Zenith embed page. Avoid assigning the host
+ * window to this URL (pointless reload / broken loop when the search is already embedded).
+ */
+export function isSameOriginZenithSearchEmbedUrl(
+  url: string,
+  appOrigin: string,
+): boolean {
+  try {
+    const u = new URL(url, appOrigin);
+    if (u.origin !== appOrigin) return false;
+    const path =
+      u.pathname.length > 1 && u.pathname.endsWith("/")
+        ? u.pathname.slice(0, -1)
+        : u.pathname;
+    return (
+      path === ZENITH_SEARCH_EMBED_PATH ||
+      path.startsWith(`${ZENITH_SEARCH_EMBED_PATH}/`)
+    );
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * `<base target="_top">` (see ZenithEmbedBody) would navigate the host for same-origin
+ * GETs to `/zenith-search-embed` (e.g. currency). Force the form to submit in the iframe.
+ */
+export function forceFormTargetSelfIfSameOriginZenithEmbed(
+  form: HTMLFormElement,
+  pageBaseHref: string,
+): void {
+  try {
+    const raw = form.getAttribute("action")?.trim() ?? "";
+    const href = new URL(raw || pageBaseHref, pageBaseHref).href;
+    const origin = new URL(pageBaseHref).origin;
+    if (isSameOriginZenithSearchEmbedUrl(href, origin)) {
+      form.target = "_self";
+    }
+  } catch {
+    /* ignore */
+  }
+}
+
+function normalizeUrlPathname(pathname: string): string {
+  if (pathname.length > 1 && pathname.endsWith("/")) {
+    return pathname.slice(0, -1);
+  }
+  return pathname;
+}
+
+/** TTI host with our marketing path (bad resolve of /zenith-search-embed against fo-emea). */
+export function isFoEmeaZenithSearchEmbedUrl(url: string): boolean {
+  try {
+    const u = new URL(url);
+    if (u.origin !== ZENITH_FRAME_BLOCKED_ORIGIN) return false;
+    const p = normalizeUrlPathname(u.pathname);
+    return (
+      p === ZENITH_SEARCH_EMBED_PATH ||
+      p.startsWith(`${ZENITH_SEARCH_EMBED_PATH}/`)
+    );
+  } catch {
+    return false;
+  }
+}
+
+/** Root-relative Zenith booking paths on fo-emea (not our app routes like /zenith-search-embed). */
+function isZenithFrontOfficePathname(pathname: string): boolean {
+  return normalizeUrlPathname(pathname).toLowerCase().startsWith("/zenith/");
+}
+
 /** Ask the parent page to navigate (embed cannot reliably assign `window.top` in all browsers). */
 export function postZenithTopNavToParent(url: string) {
   if (typeof window === "undefined" || window.parent === window) return;
+  if (isSameOriginZenithSearchEmbedUrl(url, window.location.origin)) {
+    console.log(
+      "[Zenith embed] skipped postMessage top-nav (target is zenith-search-embed)",
+      url,
+    );
+    return;
+  }
+  if (isFoEmeaZenithSearchEmbedUrl(url)) {
+    console.log(
+      "[Zenith embed] skipped postMessage top-nav (fo-emea /zenith-search-embed — stay in iframe)",
+      url,
+    );
+    return;
+  }
   console.log("[Zenith embed] postMessage top-nav → parent", url);
   window.parent.postMessage(
     { type: ZENITH_EMBED_TOP_NAV_MSG, url },
@@ -111,6 +199,13 @@ export function isZenithEmbedSearchSubmitMessage(
 
 export function postZenithSearchSubmitToParent(detail: ZenithSearchSubmitDetail) {
   if (typeof window === "undefined" || window.parent === window) return;
+  if (isFoEmeaZenithSearchEmbedUrl(detail.action)) {
+    console.log(
+      "[Zenith embed] skipped search-submit (action is fo-emea /zenith-search-embed)",
+      detail.action,
+    );
+    return;
+  }
   console.log("[Zenith embed] postMessage search-submit → parent", detail);
   window.parent.postMessage(
     {
@@ -170,6 +265,9 @@ export function resolveZenithFormActionUrl(
       return null;
     }
     if (/^https?:\/\//i.test(raw)) {
+      return null;
+    }
+    if (!isZenithFrontOfficePathname(first.pathname)) {
       return null;
     }
     const tti = new URL(raw, `${ZENITH_FRAME_BLOCKED_ORIGIN}/`);

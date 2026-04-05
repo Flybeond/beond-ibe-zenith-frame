@@ -3,6 +3,7 @@
 import { useCallback, useEffect } from "react";
 import {
   buildZenithBookingSearchResultUrl,
+  isSameOriginZenithSearchEmbedUrl,
   type ZenithSearchSubmitDetail,
 } from "@/lib/zenithNavHost";
 import ZenithSearchFrame from "./ZenithSearchFrame";
@@ -22,6 +23,12 @@ export default function HomeHeroZenithSearch() {
       params: detail.params,
       redirectUrl,
     });
+    if (isSameOriginZenithSearchEmbedUrl(redirectUrl, window.location.origin)) {
+      console.log(
+        "[HomeHeroZenithSearch] skipped assign (redirect URL is zenith-search-embed)",
+      );
+      return;
+    }
     window.location.assign(redirectUrl);
   }, []);
 
