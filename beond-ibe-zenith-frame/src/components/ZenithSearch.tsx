@@ -1,13 +1,14 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import {
   ZENITH_EMBED_HEIGHT_MSG,
   measureEmbedDocumentHeight,
 } from "@/lib/embedDocumentHeight";
 import {
   ZENITH_FRAME_BLOCKED_ORIGIN,
+  buildZenithFrontOfficeGetFormUrl,
   formToSearchParamRecord,
   isZenithFrameBlockedUrl,
   postZenithSearchSubmitToParent,
@@ -90,6 +91,8 @@ export default function ZenithSearch(props: {
   deferSearchSubmitToParent?: boolean;
 }) {
   const { deferSearchSubmitToParent = false } = props;
+  /** Avoid duplicate postMessage when both click + submit fire for the same action. */
+  const searchHandoffDedupeRef = useRef(0);
   const config = useMemo(
     () => ({ ...DEFAULT_CONFIG, ...(props.config ?? {}) }),
     [props.config]
@@ -221,6 +224,93 @@ export default function ZenithSearch(props: {
     };
   }, []);
 
+  /**
+   * Zenith calls `form.submit()` programmatically — that does NOT fire `submit` events.
+   * Intercept here and send the same URL the iframe would navigate to (GET: full query).
+   */
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (window.parent === window) return;
+    if (!deferSearchSubmitToParent) return;
+
+    const origSubmit = HTMLFormElement.prototype.submit;
+
+    HTMLFormElement.prototype.submit = function submitZenithPatched(
+      this: HTMLFormElement,
+    ) {
+      const pageBase = window.location.href;
+      const actionUrl = resolveZenithFormActionUrl(this, pageBase);
+      if (!actionUrl || actionUrl.origin !== ZENITH_FRAME_BLOCKED_ORIGIN) {
+        return origSubmit.call(this);
+      }
+
+      const method = (this.method || "GET").toUpperCase();
+      const now = Date.now();
+      if (now - searchHandoffDedupeRef.current < 600) {
+        console.log("[Zenith embed] form.submit() handoff deduped");
+        return;
+      }
+      searchHandoffDedupeRef.current = now;
+
+      if (method === "GET") {
+        const fullUrl = buildZenithFrontOfficeGetFormUrl(this, pageBase);
+        if (fullUrl) {
+          console.log(
+            "[Zenith embed] intercepted HTMLFormElement.prototype.submit() → top-nav",
+            fullUrl,
+          );
+          postZenithTopNavToParent(fullUrl);
+          return;
+        }
+      }
+
+      const detail = {
+        action: actionUrl.href,
+        method,
+        params: formToSearchParamRecord(this),
+      };
+      console.log(
+        "[Zenith embed] intercepted HTMLFormElement.prototype.submit() → search-submit",
+        detail,
+      );
+      postZenithSearchSubmitToParent(detail);
+    };
+
+    return () => {
+      HTMLFormElement.prototype.submit = origSubmit;
+    };
+  }, [deferSearchSubmitToParent]);
+
+  /** Optional: catch navigations that bypass Location.assign (Chromium Navigation API). */
+  useEffect(() => {
+    if (typeof window === "undefined" || window.parent === window) return;
+    const w = window as unknown as {
+      navigation?: EventTarget;
+    };
+    const nav = w.navigation;
+    if (!nav?.addEventListener) return;
+
+    const onNavigate = (event: Event) => {
+      const e = event as unknown as {
+        destination?: { url?: string };
+        cancelable?: boolean;
+        preventDefault?: () => void;
+      };
+      const url = e.destination?.url;
+      if (!url) return;
+      if (!isZenithFrameBlockedUrl(url, window.location.href)) return;
+      if (e.cancelable && typeof e.preventDefault === "function") {
+        e.preventDefault();
+        console.log("[Zenith embed] Navigation API → top-nav", url);
+        postZenithTopNavToParent(new URL(url).href);
+      }
+    };
+
+    nav.addEventListener("navigate", onNavigate as EventListener);
+    return () =>
+      nav.removeEventListener("navigate", onNavigate as EventListener);
+  }, []);
+
   /** Confirms embed JS ran; use iframe context in DevTools to see this. */
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -231,13 +321,166 @@ export default function ZenithSearch(props: {
   }, []);
 
   /**
-   * Form submit: always listen (embed page). Parent-handoff only when in iframe.
-   * Uses window capture so we still see submits from Shadow DOM / unusual trees.
+   * Form submit + search button clicks (Zenith often uses `button` + JS, no native submit).
+   * Logs in iframe DevTools context. postMessage when embedded + FrontOffice form.
    */
   useEffect(() => {
     if (typeof window === "undefined") return;
 
     const baseHref = window.location.href;
+
+    const handoffFromForm = (
+      form: HTMLFormElement,
+      source: "submit" | "click",
+      e?: Event,
+    ) => {
+      const actionUrl = resolveZenithFormActionUrl(form, baseHref);
+      if (!actionUrl || actionUrl.origin !== ZENITH_FRAME_BLOCKED_ORIGIN) {
+        console.log(`[Zenith embed] ${source}: form action not FrontOffice`, {
+          actionAttr: form.getAttribute("action"),
+          resolvedHref: actionUrl?.href ?? null,
+        });
+        return;
+      }
+
+      const method = (form.method || "GET").toUpperCase();
+      const detail = {
+        action: actionUrl.href,
+        method,
+        params: formToSearchParamRecord(form),
+      };
+      console.log(`[Zenith embed] FrontOffice handoff (${source})`, detail);
+
+      if (source === "click" && !deferSearchSubmitToParent) {
+        console.log(
+          "[Zenith embed] click-only: deferSearchSubmitToParent is off — parent handoff runs on native submit only",
+        );
+        return;
+      }
+
+      const embedded = window.parent !== window;
+      if (!embedded) return;
+
+      const now = Date.now();
+      if (now - searchHandoffDedupeRef.current < 600) {
+        console.log("[Zenith embed] handoff deduped (submit+click same gesture)");
+        if (deferSearchSubmitToParent && e) e.preventDefault();
+        return;
+      }
+      searchHandoffDedupeRef.current = now;
+
+      if (deferSearchSubmitToParent && method === "GET") {
+        const fullUrl = buildZenithFrontOfficeGetFormUrl(form, baseHref);
+        if (fullUrl) {
+          console.log(
+            `[Zenith embed] GET ${source} → top-nav (exact Zenith URL)`,
+            fullUrl,
+          );
+          postZenithTopNavToParent(fullUrl);
+          if (e) e.preventDefault();
+          return;
+        }
+      }
+
+      postZenithSearchSubmitToParent(detail);
+
+      if (deferSearchSubmitToParent && e) {
+        e.preventDefault();
+      } else if (!deferSearchSubmitToParent) {
+        form.target = "_top";
+      }
+    };
+
+    const clickInsideMount = (e: MouseEvent): boolean => {
+      const mount = document.getElementById("SearchCriterias");
+      if (!mount) return false;
+      const path =
+        typeof e.composedPath === "function" ? e.composedPath() : [];
+      return path.some((n) => {
+        if (n === mount) return true;
+        return n instanceof Node && mount.contains(n);
+      });
+    };
+
+    const onClickCapture = (e: MouseEvent) => {
+      if (
+        e.button !== 0 ||
+        e.ctrlKey ||
+        e.metaKey ||
+        e.shiftKey ||
+        e.altKey
+      ) {
+        return;
+      }
+      if (!clickInsideMount(e)) return;
+
+      const rawTarget = e.target;
+      if (!(rawTarget instanceof Element)) return;
+
+      console.log("[Zenith embed] click inside #SearchCriterias", {
+        targetTag: rawTarget.tagName,
+        className:
+          typeof (rawTarget as HTMLElement).className === "string"
+            ? (rawTarget as HTMLElement).className.slice(0, 120)
+            : "",
+      });
+
+      const control = rawTarget.closest(
+        "button, [role='button'], input[type='submit'], input[type='image'], input[type='button']",
+      );
+      if (!control) return;
+
+      const typeAttr =
+        control instanceof HTMLButtonElement
+          ? (control.getAttribute("type") || "submit").toLowerCase()
+          : control instanceof HTMLInputElement
+            ? control.type.toLowerCase()
+            : "";
+
+      const labelBlob =
+        `${control.textContent || ""} ${control.getAttribute("aria-label") || ""} ${control.getAttribute("value") || ""}`.toLowerCase();
+
+      const labelLooksLikeSearch =
+        labelBlob.includes("search") ||
+        labelBlob.includes("flight") ||
+        labelBlob.includes("find") ||
+        labelBlob.includes("book");
+
+      const looksLikeSearchButton =
+        typeAttr === "submit" ||
+        typeAttr === "image" ||
+        (typeAttr === "button" && labelLooksLikeSearch) ||
+        (control.getAttribute("role") === "button" && labelLooksLikeSearch);
+
+      if (!looksLikeSearchButton) {
+        console.log("[Zenith embed] click: control ignored (not treated as search)", {
+          typeAttr,
+        });
+        return;
+      }
+
+      console.log("[Zenith embed] search control click", {
+        tag: control.tagName,
+        typeAttr,
+        labelSnippet: labelBlob.trim().slice(0, 80),
+      });
+
+      const form =
+        control instanceof HTMLButtonElement || control instanceof HTMLInputElement
+          ? control.form
+          : null;
+      const resolvedForm =
+        form instanceof HTMLFormElement
+          ? form
+          : control.closest("form");
+
+      if (!(resolvedForm instanceof HTMLFormElement)) {
+        console.log("[Zenith embed] search click: no form found on control");
+        return;
+      }
+
+      handoffFromForm(resolvedForm, "click", e);
+    };
 
     const submitSeen = new WeakSet<SubmitEvent>();
     const onSubmitCapturing = (e: Event) => {
@@ -253,38 +496,14 @@ export default function ZenithSearch(props: {
         inIframe: window.parent !== window,
       });
 
-      const actionUrl = resolveZenithFormActionUrl(form, baseHref);
-      if (!actionUrl || actionUrl.origin !== ZENITH_FRAME_BLOCKED_ORIGIN) {
-        console.log("[Zenith embed] form submit not handled (action not FrontOffice)", {
-          actionAttr: form.getAttribute("action"),
-          resolvedHref: actionUrl?.href ?? null,
-        });
-        return;
-      }
-
-      const detail = {
-        action: actionUrl.href,
-        method: (form.method || "GET").toUpperCase(),
-        params: formToSearchParamRecord(form),
-      };
-
-      console.log("[Zenith embed] FrontOffice form submit", detail);
-
-      if (deferSearchSubmitToParent && window.parent !== window) {
-        e.preventDefault();
-        postZenithSearchSubmitToParent(detail);
-        return;
-      }
-
-      if (window.parent !== window) {
-        postZenithSearchSubmitToParent(detail);
-        form.target = "_top";
-      }
+      handoffFromForm(form, "submit", e);
     };
 
+    window.addEventListener("click", onClickCapture, true);
     window.addEventListener("submit", onSubmitCapturing, true);
     document.addEventListener("submit", onSubmitCapturing, true);
     return () => {
+      window.removeEventListener("click", onClickCapture, true);
       window.removeEventListener("submit", onSubmitCapturing, true);
       document.removeEventListener("submit", onSubmitCapturing, true);
     };

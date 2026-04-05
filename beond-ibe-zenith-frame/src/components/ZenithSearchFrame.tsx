@@ -165,6 +165,9 @@ export default function ZenithSearchFrame({
 
       if (isZenithEmbedTopNavMessage(e.data)) {
         if (!isAllowedZenithTopNavUrl(e.data.url)) return;
+        console.log("[ZenithSearchFrame] top-nav (assign host to iframe target URL)", {
+          url: e.data.url,
+        });
         window.location.assign(e.data.url);
         return;
       }

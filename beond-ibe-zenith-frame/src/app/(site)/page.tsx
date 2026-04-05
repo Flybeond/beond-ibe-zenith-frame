@@ -1,5 +1,4 @@
 import HomeHero from "../../components/HomeHero";
-import HeroBannerCarousel from "@/components/HeroBannerCarousel";
 import ThreeImageFeatures, {
   BEOND_THREE_IMAGE_FEATURES,
 } from "../../components/ThreeImageFeatures";
@@ -7,7 +6,6 @@ import ThreeImageFeatures, {
 export default function Home() {
   return (
     <>
-    <HeroBannerCarousel></HeroBannerCarousel>
       <HomeHero />
       <ThreeImageFeatures
         title={BEOND_THREE_IMAGE_FEATURES.title}

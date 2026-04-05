@@ -49,6 +49,7 @@ export function isAllowedZenithTopNavUrl(url: string): boolean {
 /** Ask the parent page to navigate (embed cannot reliably assign `window.top` in all browsers). */
 export function postZenithTopNavToParent(url: string) {
   if (typeof window === "undefined" || window.parent === window) return;
+  console.log("[Zenith embed] postMessage top-nav → parent", url);
   window.parent.postMessage(
     { type: ZENITH_EMBED_TOP_NAV_MSG, url },
     window.location.origin,
@@ -127,6 +128,30 @@ export function postZenithSearchSubmitToParent(detail: ZenithSearchSubmitDetail)
  * against the embed page URL that becomes our origin, not fo-emea — fix by resolving
  * path-only actions against the FrontOffice origin.
  */
+/**
+ * Full URL the browser would load for a GET form (action + query from FormData).
+ * Use when programmatic `form.submit()` bypasses `submit` events.
+ */
+export function buildZenithFrontOfficeGetFormUrl(
+  form: HTMLFormElement,
+  pageBaseHref: string,
+): string | null {
+  const actionUrl = resolveZenithFormActionUrl(form, pageBaseHref);
+  if (!actionUrl || actionUrl.origin !== ZENITH_FRAME_BLOCKED_ORIGIN) {
+    return null;
+  }
+  const method = (form.method || "GET").toUpperCase();
+  if (method !== "GET") return null;
+  const u = new URL(actionUrl.href);
+  const fd = new FormData(form);
+  for (const [k, v] of fd.entries()) {
+    if (typeof v !== "string") continue;
+    const key = String(k).slice(0, 128);
+    u.searchParams.append(key, v.slice(0, MAX_FORM_VALUE_LEN));
+  }
+  return u.href;
+}
+
 export function resolveZenithFormActionUrl(
   form: HTMLFormElement,
   pageBaseHref: string,
