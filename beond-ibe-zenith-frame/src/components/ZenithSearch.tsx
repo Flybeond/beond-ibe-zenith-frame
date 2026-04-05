@@ -2,6 +2,10 @@
 "use client";
 
 import { useEffect, useMemo } from "react";
+import {
+  ZENITH_EMBED_HEIGHT_MSG,
+  measureEmbedDocumentHeight,
+} from "@/lib/embedDocumentHeight";
 
 type ZenithSearchConfig = {
   baseUrl: string;
@@ -108,6 +112,68 @@ export default function ZenithSearch(props: { config?: Partial<ZenithSearchConfi
         console.error("ZenithSearch init failed", err);
       });
     }
+  }, []);
+
+  /** Report document height to parent iframe (authoritative for async Zenith mount / fonts). */
+  useEffect(() => {
+    if (typeof window === "undefined" || window.parent === window) return;
+
+    const targetOrigin = window.location.origin;
+    let raf: number | null = null;
+
+    const post = () => {
+      const height = measureEmbedDocumentHeight(document);
+      window.parent.postMessage(
+        { type: ZENITH_EMBED_HEIGHT_MSG, height },
+        targetOrigin,
+      );
+    };
+
+    const schedulePost = () => {
+      if (raf != null) cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        raf = null;
+        post();
+      });
+    };
+
+    const ro = new ResizeObserver(schedulePost);
+    ro.observe(document.documentElement);
+    if (document.body) ro.observe(document.body);
+
+    const mount = document.getElementById("SearchCriterias");
+    if (mount) ro.observe(mount);
+
+    const mo = new MutationObserver(schedulePost);
+    if (document.body) {
+      mo.observe(document.body, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        characterData: true,
+      });
+    }
+
+    void document.fonts?.ready?.then(() => schedulePost());
+
+    schedulePost();
+    const extraTimers = [50, 150, 400, 1000, 2200, 5000].map((ms) =>
+      window.setTimeout(schedulePost, ms),
+    );
+
+    let ticks = 0;
+    const poll = window.setInterval(() => {
+      schedulePost();
+      if (++ticks >= 32) window.clearInterval(poll);
+    }, 200);
+
+    return () => {
+      if (raf != null) cancelAnimationFrame(raf);
+      ro.disconnect();
+      mo.disconnect();
+      extraTimers.forEach((id) => window.clearTimeout(id));
+      window.clearInterval(poll);
+    };
   }, []);
 
   return (

@@ -49,7 +49,7 @@ export default function ThreeImageFeatures({
 }: ThreeImageFeaturesProps) {
   return (
     <section
-      className={`bg-(--color-surface-2) text-(--color-foreground) ${className}`.trim()}
+      className={`bg-(--color-surface-2) text-(--color-foreground) pt-10 md:pt-0 ${className}`.trim()}
       aria-labelledby="three-image-features-title"
     >
       <div className="site-container py-12 md:py-16 lg:py-20">
