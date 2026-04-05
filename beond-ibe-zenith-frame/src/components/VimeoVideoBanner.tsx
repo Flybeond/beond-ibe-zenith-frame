@@ -65,14 +65,12 @@ export default function VimeoVideoBanner({
 
   return (
     <div
-      className={`bg-center bg-cover ${className}`.trim()}
-      style={{
-        padding: "56.2% 0 0 0",
-        position: "relative",
-        ...(posterUrl
+      className={`relative bg-center bg-cover p-0 pt-[100%] md:pt-[56.2%] w-full max-md:left-1/2 max-md:w-screen max-md:max-w-none max-md:-translate-x-1/2 md:left-auto md:w-full md:translate-x-0 ${className}`.trim()}
+      style={
+        posterUrl
           ? { backgroundImage: `url(${JSON.stringify(posterUrl)})` }
-          : {}),
-      }}
+          : undefined
+      }
     >
       {/* Mobile (default; hidden from md and up) */}
       <iframe

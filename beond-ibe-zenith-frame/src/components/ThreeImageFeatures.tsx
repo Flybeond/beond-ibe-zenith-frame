@@ -19,7 +19,7 @@ export const BEOND_THREE_IMAGE_FEATURES = {
   title: "Premium direct flights to and from the Maldives",
   items: [
     {
-      src: "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=900&h=675&fit=crop&q=80",
+      src: "/3images-1.webp",
       alt: "Tropical coastline and clear water",
       subtitle: "Your private sanctuary awaits",
       description:
@@ -33,7 +33,7 @@ export const BEOND_THREE_IMAGE_FEATURES = {
         "Savour a menu featuring globally and regionally inspired dishes prepared by renowned chefs using fresh, seasonal and sustainable ingredients. Our attentive crew ensures a bespoke dining experience, complete with exquisite chinaware, fine wines and select beverages.",
     },
     {
-      src: "https://images.unsplash.com/photo-1488085061387-422e29abf0b2?w=900&h=675&fit=crop&q=80",
+      src: "/3images-3.webp",
       alt: "Tailored comfort & entertainment",
       subtitle: "Tailored comfort & entertainment",
       description:
