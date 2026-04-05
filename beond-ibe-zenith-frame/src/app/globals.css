@@ -28,7 +28,7 @@
   --color-brand: var(--brand);
   --color-brand-ink: var(--brand-ink);
   --color-ink: var(--ink);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-lato), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono);
 }
 
@@ -36,7 +36,7 @@ body {
   /* flybeond.com uses a light, premium neutral behind content */
   background: var(--surface-2);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
 }
 
 /* Shared content width with header/footer (Tailwind max-w-6xl + horizontal padding). */

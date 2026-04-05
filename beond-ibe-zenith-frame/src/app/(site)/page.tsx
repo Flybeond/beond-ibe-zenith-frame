@@ -1,8 +1,12 @@
+import ThreeImageFeatures, {
+  BEOND_THREE_IMAGE_FEATURES,
+} from "../../components/ThreeImageFeatures";
 import VimeoVideoBanner from "../../components/VimeoVideoBanner";
 import ZenithSearchFrame from "../../components/ZenithSearchFrame";
 
 export default function Home() {
   return (
+    <>
     <div className="relative isolate w-full">
       <VimeoVideoBanner className="w-full" />
       <div className="pointer-events-none absolute inset-0 z-10 flex flex-col pt-20 md:pt-28 pb-5 md:pb-8">
@@ -22,5 +26,10 @@ export default function Home() {
         </div>
       </div>
     </div>
+    <ThreeImageFeatures
+      title={BEOND_THREE_IMAGE_FEATURES.title}
+      items={BEOND_THREE_IMAGE_FEATURES.items}
+    />
+    </>
   );
 }
