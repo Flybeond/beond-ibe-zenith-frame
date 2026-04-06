@@ -53,7 +53,7 @@ export default function ContactBanner({
             <div className="grid grid-cols-3 gap-3 md:gap-4">
               <div className="relative aspect-3/4 overflow-hidden rounded-2xl bg-(--color-surface) ring-1 ring-black/5">
                 <Image
-                  src="/3images-1.webp"
+                  src="/contact/contactImage2.webp"
                   alt=""
                   fill
                   className="object-cover"
@@ -63,7 +63,7 @@ export default function ContactBanner({
               </div>
               <div className="relative aspect-3/4 overflow-hidden rounded-2xl bg-(--color-surface) ring-1 ring-black/5">
                 <Image
-                  src="/3images-2.webp"
+                  src="/contact/contactImage1.webp"
                   alt=""
                   fill
                   className="object-cover"
@@ -73,7 +73,7 @@ export default function ContactBanner({
               </div>
               <div className="relative aspect-3/4 overflow-hidden rounded-2xl bg-(--color-surface) ring-1 ring-black/5">
                 <Image
-                  src="/3images-3.webp"
+                  src="/contact/contactImage3.webp"
                   alt=""
                   fill
                   className="object-cover"
