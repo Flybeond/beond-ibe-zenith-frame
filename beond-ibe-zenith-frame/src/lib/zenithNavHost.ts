@@ -278,11 +278,13 @@ export function resolveZenithFormActionUrl(
 }
 
 /**
- * Target BookingEngine SearchResult on FrontOffice (session segment from TTI).
- * Update if Zenith provides a dynamic session URL.
+ * Target BookingEngine SearchResult on FrontOffice.
+ *
+ * NOTE: Avoid hardcoding the `(S(...))` session segment in the base URL — it changes and
+ * can become invalid. Use the sessionless SearchResult path; Zenith will establish session.
  */
 export const ZENITH_BOOKING_SEARCH_RESULT_URL =
-  "https://fo-emea.ttinteractive.com/Zenith/FrontOffice/(S(19243186797549dfbd089ffa28765ab8))/beond/en-GB/BookingEngine/SearchResult";
+  "https://fo-emea.ttinteractive.com/Zenith/FrontOffice/beond/en-GB/BookingEngine/SearchResult";
 
 /** Append Zenith form fields as query string on the SearchResult URL. */
 export function buildZenithBookingSearchResultUrl(
