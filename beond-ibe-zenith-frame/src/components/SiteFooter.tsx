@@ -175,7 +175,7 @@ export default function SiteFooter() {
 
         <div className="mt-10 pt-8 border-t border-white/10 flex flex-col md:flex-row gap-4 items-end md:items-center md:justify-end">
           <div className="text-xs text-white/60 text-right">
-            © {year} BeOnd Aivation DWC LLC
+            © {year} 2026 beOnd Aviation DWC LLC
           </div>
         </div>
       </div>
