@@ -74,7 +74,7 @@ const footerColumns: Array<{
 export default function SiteFooter() {
   const year = new Date().getFullYear();
   return (
-    <footer className="bg-(--color-ink) text-white mt-10">
+    <footer className="bg-(--color-ink) text-white">
       <div className="site-container pt-12 pb-8">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10">
           <div className="flex flex-col gap-4 md:col-span-3">
