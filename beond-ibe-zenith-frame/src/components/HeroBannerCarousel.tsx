@@ -33,8 +33,8 @@ export const DEFAULT_HERO_CAROUSEL_SLIDES: HeroCarouselSlide[] = [
     caption: "",
   },
   {
-    src: "/carousel.2880x1400 V5.webp",
-    mobileSrc: "/carousel/1080x1080 V2.webp",
+    src: "/carousel/2880x14004.webp",
+    mobileSrc: "/carousel/1080x1080-5.webp",
     alt: "Tailored comfort and entertainment",
     caption: "",
   },
