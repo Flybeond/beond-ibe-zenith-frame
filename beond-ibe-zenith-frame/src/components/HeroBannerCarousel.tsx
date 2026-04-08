@@ -22,7 +22,7 @@ export type HeroCarouselSlide = {
 export const DEFAULT_HERO_CAROUSEL_SLIDES: HeroCarouselSlide[] = [
   {
     src: "/carousel/2880x1400 1.webp",
-    mobileSrc: "/carousel/1080x1080 V2.webp",
+    mobileSrc: "/carousel/1080x1080.webp",
     alt: "Tropical coastline and clear water",
     caption: "",
   },
@@ -33,7 +33,7 @@ export const DEFAULT_HERO_CAROUSEL_SLIDES: HeroCarouselSlide[] = [
     caption: "",
   },
   {
-    src: "/carousel/2880x1400 V1.webp",
+    src: "/carousel.2880x1400 V5.webp",
     mobileSrc: "/carousel/1080x1080 V2.webp",
     alt: "Tailored comfort and entertainment",
     caption: "",
