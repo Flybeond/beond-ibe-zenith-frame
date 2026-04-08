@@ -20,6 +20,7 @@ function buildVimeoEmbedSrc(videoId: string) {
     portrait: "0",
     controls: "0",
     dnt: "1",
+    thumbnail_id: "1922320646",
   });
   return `https://player.vimeo.com/video/${videoId}?${params.toString()}`;
 }
