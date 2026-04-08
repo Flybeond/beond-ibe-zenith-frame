@@ -11,6 +11,8 @@ import {
 
 export type HeroCarouselSlide = {
   src: string;
+  /** Optional mobile-optimized image (used on < md). */
+  mobileSrc?: string;
   alt: string;
   /** Short line shown over the slide (optional). */
   caption?: string;
@@ -20,16 +22,19 @@ export type HeroCarouselSlide = {
 export const DEFAULT_HERO_CAROUSEL_SLIDES: HeroCarouselSlide[] = [
   {
     src: "/carousel/2880x1400 1.webp",
+    mobileSrc: "/carousel/1080x1080 V2.webp",
     alt: "Tropical coastline and clear water",
     caption: "Your private sanctuary awaits",
   },
   {
     src: "/carousel/2880x1400.webp",
+    mobileSrc: "/carousel/1080x1080 V2.webp",
     alt: "A culinary adventure at 30,000 feet",
     caption: "A culinary adventure at 30,000 feet",
   },
   {
     src: "/carousel/2880x1400 V1.webp",
+    mobileSrc: "/carousel/1080x1080 V2.webp",
     alt: "Tailored comfort and entertainment",
     caption: "Tailored comfort & entertainment",
   },
@@ -131,11 +136,22 @@ export default function HeroBannerCarousel({
                 }`}
                 aria-hidden={i !== safeIndex}
               >
+                {slide.mobileSrc ? (
+                  <Image
+                    src={slide.mobileSrc}
+                    alt={slide.alt}
+                    fill
+                    className="object-cover md:hidden"
+                    sizes="100vw"
+                    priority={i === 0}
+                    draggable={false}
+                  />
+                ) : null}
                 <Image
                   src={slide.src}
                   alt={slide.alt}
                   fill
-                  className="object-cover"
+                  className={slide.mobileSrc ? "hidden object-cover md:block" : "object-cover"}
                   sizes="100vw"
                   priority={i === 0}
                   draggable={false}

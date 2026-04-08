@@ -1,4 +1,4 @@
-import HomeHero from "../../components/HomeHero";
+import HomeHeroCarousel from "../../components/HomeHeroCarousel";
 import ThreeImageFeatures, {
   BEOND_THREE_IMAGE_FEATURES,
 } from "../../components/ThreeImageFeatures";
@@ -110,7 +110,7 @@ export default async function Home({
 
   return (
     <>
-      <HomeHero />
+      <HomeHeroCarousel />
       <ThreeImageFeatures
         title={BEOND_THREE_IMAGE_FEATURES.title}
         items={BEOND_THREE_IMAGE_FEATURES.items}
