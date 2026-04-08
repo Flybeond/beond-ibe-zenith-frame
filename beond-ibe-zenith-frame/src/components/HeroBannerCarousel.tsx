@@ -24,19 +24,19 @@ export const DEFAULT_HERO_CAROUSEL_SLIDES: HeroCarouselSlide[] = [
     src: "/carousel/2880x1400 1.webp",
     mobileSrc: "/carousel/1080x1080 V2.webp",
     alt: "Tropical coastline and clear water",
-    caption: "Your private sanctuary awaits",
+    caption: "",
   },
   {
     src: "/carousel/2880x1400.webp",
     mobileSrc: "/carousel/1080x1080 V2.webp",
     alt: "A culinary adventure at 30,000 feet",
-    caption: "A culinary adventure at 30,000 feet",
+    caption: "",
   },
   {
     src: "/carousel/2880x1400 V1.webp",
     mobileSrc: "/carousel/1080x1080 V2.webp",
     alt: "Tailored comfort and entertainment",
-    caption: "Tailored comfort & entertainment",
+    caption: "",
   },
 ];
 
