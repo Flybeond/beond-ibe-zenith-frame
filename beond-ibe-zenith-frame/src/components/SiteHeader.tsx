@@ -36,6 +36,7 @@ const menuItems: Array<{
 }> = [
   ...navItems,
   { label: "Contact", href: "/contact" },
+  { label: "beOnd Assurance", href: "/beond-assurance" },
 ];
 
 export default function SiteHeader() {

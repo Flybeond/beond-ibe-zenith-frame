@@ -17,6 +17,19 @@
   --brand: #d2926a; /* warm sand/gold accent */
   --brand-ink: #997a00; /* deeper gold/brown */
   --ink: #2a2e36;
+
+  /* Theme palette */
+  --primary-obsidian: #2a2e36;
+  --primary-copper: #d2926a;
+  --primary-shimmer: #4b4e56;
+
+  --secondary-cobalt: #00374c;
+  --secondary-aqua: #1d7d92;
+  --secondary-seafoam: #a9d1d1;
+  --secondary-linen: #e6ded5;
+
+  --lightpink: #fbf4f0;
+  --graymix: #f3f3f4;
 }
 
 @theme inline {
@@ -28,6 +41,16 @@
   --color-brand: var(--brand);
   --color-brand-ink: var(--brand-ink);
   --color-ink: var(--ink);
+  --color-primary-obsidian: var(--primary-obsidian);
+  --color-primary-copper: var(--primary-copper);
+  --color-primary-shimmer: var(--primary-shimmer);
+  --color-secondary-cobalt: var(--secondary-cobalt);
+  --color-secondary-aqua: var(--secondary-aqua);
+  --color-secondary-seafoam: var(--secondary-seafoam);
+  --color-secondary-linen: var(--secondary-linen);
+
+  --color-lightpink: var(--lightpink);
+  --color-graymix: var(--graymix);
   --font-sans: var(--font-lato), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono);
 }
