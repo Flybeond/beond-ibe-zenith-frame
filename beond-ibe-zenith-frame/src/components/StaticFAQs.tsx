@@ -399,7 +399,7 @@ export default function StaticFAQs() {
 
   return (
     <div className="bg-white">
-      <div className="m-auto xl:w-5/6 md:w-5/6 xl:pb-10 xs:pb-24 xl:px-0 xs:px-4 md:px-0">
+      <div className="m-auto px-4 md:w-5/6 md:px-0 xl:w-5/6 xl:pb-10 pb-24">
         <div className="py-3">
           <div className="flex">
             <Link
@@ -451,7 +451,7 @@ export default function StaticFAQs() {
           </div>
         </div>
 
-        <div className="xl:flex xs:flex xs:flex-wrap gap-3 my-5">
+        <div className="xl:flex xs:flex xs:flex-wrap gap-5 md:gap-3 my-5">
           {filteredTopics.length > 0 ? (
             filteredTopics.map((topic, index) => {
               const active = topicIndex === index;

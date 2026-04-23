@@ -1,5 +1,6 @@
 import React from "react";
 import { ExternalLinkIcon } from "./ExternalLinkIcon";
+import NotificationBar from "./NotificationBar";
 
 const logoUrl = "/companylogo-dark.png";
 
@@ -42,6 +43,7 @@ const menuItems: Array<{
 export default function SiteHeader() {
   return (
     <header className="sticky top-0 z-50 w-full bg-(--color-background) text-(--color-foreground) border-b border-black/5 shadow-md">
+      <NotificationBar />
       <div className="site-container">
         <div className="h-16 flex items-center justify-between gap-4">
           <a
