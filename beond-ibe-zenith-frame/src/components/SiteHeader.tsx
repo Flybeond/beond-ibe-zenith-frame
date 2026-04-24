@@ -38,6 +38,7 @@ const menuItems: Array<{
   ...navItems,
   { label: "Contact", href: "/contact" },
   { label: "beOnd Assurance", href: "/beond-assurance" },
+  { label: "Our Promise", href: "/our-promise" },
 ];
 
 export default function SiteHeader() {
