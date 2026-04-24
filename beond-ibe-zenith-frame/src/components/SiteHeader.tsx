@@ -39,6 +39,7 @@ const menuItems: Array<{
   { label: "Contact", href: "/contact" },
   { label: "beOnd Assurance", href: "/beond-assurance" },
   { label: "Our Promise", href: "/our-promise" },
+  { label: "Terms and conditions", href: "/TermsAndConditions" },
 ];
 
 export default function SiteHeader() {
