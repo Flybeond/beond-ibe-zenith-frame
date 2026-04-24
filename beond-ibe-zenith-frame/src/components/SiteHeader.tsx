@@ -24,6 +24,10 @@ const navItems: Array<{
     href: "https://fo-emea.ttinteractive.com/Zenith/FrontOffice/beond/en-GB/FlightStatusSearch/FlightStatus",
   },
   {
+    label: "Destinations",
+    href: "/destinations",
+  },
+  {
     label: "beOnd Holidays",
     href: BEOND_HOLIDAYS_URL,
     openInNewTab: true,
@@ -36,6 +40,7 @@ const menuItems: Array<{
   openInNewTab?: boolean;
 }> = [
   ...navItems,
+  { label: "Destinations", href: "/destinations" },
   { label: "Contact", href: "/contact" },
   { label: "beOnd Assurance", href: "/beond-assurance" },
   { label: "Our Promise", href: "/our-promise" },
