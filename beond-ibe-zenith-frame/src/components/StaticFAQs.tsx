@@ -360,7 +360,11 @@ function renderAnswer(answer: ReactNode) {
   return answer;
 }
 
-export default function StaticFAQs() {
+export default function StaticFAQs({
+  hideHeader = false,
+}: {
+  hideHeader?: boolean;
+}) {
   const [topicIndex, setTopicIndex] = useState(0);
   const [searchText, setSearchText] = useState("");
   const [openQuestions, setOpenQuestions] = useState<number[]>([]);
@@ -400,36 +404,44 @@ export default function StaticFAQs() {
   return (
     <div className="bg-white">
       <div className="m-auto px-4 md:w-5/6 md:px-0 xl:w-5/6 xl:pb-10 pb-24">
-        <div className="py-3">
-          <div className="flex">
-            <Link
-              href="/"
-              className="text-sm font-normal text-(--color-primary-shimmer) hover:underline"
-            >
-              {CONTENT.breadcrumbHomeLabel} /
-            </Link>
-            <div className="text-sm font-semibold text-(--color-secondary-cobalt)">
-              &nbsp;{CONTENT.pageName}
+        {hideHeader ? null : (
+          <>
+            <div className="py-3">
+              <div className="flex">
+                <Link
+                  href="/"
+                  className="text-sm font-normal text-(--color-primary-shimmer) hover:underline"
+                >
+                  {CONTENT.breadcrumbHomeLabel} /
+                </Link>
+                <div className="text-sm font-semibold text-(--color-secondary-cobalt)">
+                  &nbsp;{CONTENT.pageName}
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
+
+            <div className="py-3">
+              <div className="xl:w-1/2">
+                <div className="xs:w-full xs:justify-center rounded-lg py-3 text-black xl:leading-tight xl:text-5xl xs:text-3xl font-light tracking-wide">
+                  {CONTENT.heading}
+                </div>
+              </div>
+
+              <div className="xl:flex md:flex xs:block xl:justify-between md:justify-between items-start py-2 gap-4">
+                <div className="text-xl text-black pr-4">
+                  {CONTENT.subheading ? (
+                    <p className="max-w-3xl text-sm leading-relaxed text-(--color-primary-shimmer) md:text-base">
+                      {CONTENT.subheading}
+                    </p>
+                  ) : null}
+                </div>
+              </div>
+            </div>
+          </>
+        )}
 
         <div className="py-3">
-          <div className="xl:w-1/2">
-            <div className="xs:w-full xs:justify-center rounded-lg py-3 text-black xl:leading-tight xl:text-5xl xs:text-3xl font-light tracking-wide">
-              {CONTENT.heading}
-            </div>
-          </div>
-
           <div className="xl:flex md:flex xs:block xl:justify-between md:justify-between items-start py-2 gap-4">
-            <div className="text-xl text-black pr-4">
-              {CONTENT.subheading ? (
-                <p className="max-w-3xl text-sm leading-relaxed text-(--color-primary-shimmer) md:text-base">
-                  {CONTENT.subheading}
-                </p>
-              ) : null}
-            </div>
-
             <div className="text-black xl:w-1/4 relative xl:pt-0 xs:pt-4 md:w-2/5">
               <input
                 type="search"
