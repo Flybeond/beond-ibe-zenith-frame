@@ -63,8 +63,8 @@ export default function SiteHeader() {
             />
           </a>
 
-          <div className="hidden md:flex items-center gap-7">
-            <nav className="flex items-center gap-7 text-sm font-medium">
+          <div className="hidden md:flex flex-1 items-center">
+            <nav className="mx-auto flex items-center gap-7 text-sm font-medium">
               {navItems.map((item) => (
                 <a
                   key={item.href}
@@ -86,7 +86,7 @@ export default function SiteHeader() {
               ))}
             </nav>
 
-            <details className="relative">
+            <details className="relative ml-auto">
               <summary
                 className="list-none cursor-pointer select-none rounded-full border border-black/15 p-2 text-(--color-foreground) hover:bg-black/5 transition-colors"
                 aria-label="Open menu"
