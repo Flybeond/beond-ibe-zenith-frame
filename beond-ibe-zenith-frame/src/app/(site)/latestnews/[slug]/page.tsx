@@ -1,18 +1,27 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import React from "react";
 import { getNewsArticleBySlug, NEWS_ARTICLES } from "@/lib/news";
 
 export function generateStaticParams() {
   return NEWS_ARTICLES.map((a) => ({ slug: a.slug }));
 }
 
-export function generateMetadata({
+async function resolveParams(
+  params: { slug?: string | string[] } | Promise<{ slug?: string | string[] }> | undefined,
+): Promise<{ slug?: string | string[] }> {
+  if (!params) return {};
+  return await Promise.resolve(params);
+}
+
+export async function generateMetadata({
   params,
 }: {
-  params: { slug: string };
-}): Metadata {
-  const a = getNewsArticleBySlug(params.slug);
+  params: { slug?: string | string[] } | Promise<{ slug?: string | string[] }>;
+}): Promise<Metadata> {
+  const p = await resolveParams(params);
+  const a = getNewsArticleBySlug(p.slug);
   if (!a) {
     return { title: "News | Beond" };
   }
@@ -22,12 +31,13 @@ export function generateMetadata({
   };
 }
 
-export default function LatestNewsDetailsPage({
+export default async function LatestNewsDetailsPage({
   params,
 }: {
-  params: { slug: string };
+  params: { slug?: string | string[] } | Promise<{ slug?: string | string[] }>;
 }) {
-  const article = getNewsArticleBySlug(params.slug);
+  const p = await resolveParams(params);
+  const article = getNewsArticleBySlug(p.slug);
 
   if (!article) {
     return (
@@ -96,15 +106,55 @@ export default function LatestNewsDetailsPage({
             />
           </div>
           <div className="p-6 md:p-8">
-            <p className="text-base font-medium text-(--color-secondary-cobalt)">
-              {article.excerpt}
-            </p>
 
             <div className="mt-6 space-y-4 text-sm leading-relaxed text-(--color-muted) md:text-base">
-              {article.content.map((p, i) => (
-                <p key={i}>{p}</p>
-              ))}
+              {(() => {
+                const out: React.ReactNode[] = [];
+                let pendingBullets: string[] = [];
+
+                const flushBullets = (keyBase: string) => {
+                  if (pendingBullets.length === 0) return;
+                  const items = pendingBullets;
+                  pendingBullets = [];
+                  out.push(
+                    <ul key={`${keyBase}-ul`} className="list-disc pl-5 space-y-2">
+                      {items.map((b, i) => (
+                        <li key={`${keyBase}-li-${i}`}>{b.replace(/^•\s*/, "")}</li>
+                      ))}
+                    </ul>,
+                  );
+                };
+
+                article.content.forEach((p, i) => {
+                  const trimmed = p.trim();
+                  const isBullet = /^•\s*/.test(trimmed);
+
+                  if (isBullet) {
+                    pendingBullets.push(trimmed);
+                    return;
+                  }
+
+                  flushBullets(String(i));
+                  out.push(<p key={`p-${i}`}>{p}</p>);
+                });
+
+                flushBullets("end");
+                return out;
+              })()}
             </div>
+
+            {article.instagramUrl ? (
+              <div className="mt-8">
+                <a
+                  href={article.instagramUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-semibold text-(--color-primary-copper) hover:underline underline-offset-4"
+                >
+                  See our Instagram post
+                </a>
+              </div>
+            ) : null}
 
             <div className="mt-10">
               <Link

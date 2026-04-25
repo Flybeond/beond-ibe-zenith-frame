@@ -16,16 +16,12 @@ const navItems: Array<{
     href: "https://fo-emea.ttinteractive.com/Zenith/FrontOffice/beond/en-GB/Home/FindBooking",
   },
   {
-    label: "Check In",
-    href: "https://fo-emea.ttinteractive.com/zenith/frontoffice/beond/en-GB/Home/FindBooking?mode=webchecking",
-  },
-  {
-    label: "Flight Status",
-    href: "https://fo-emea.ttinteractive.com/Zenith/FrontOffice/beond/en-GB/FlightStatusSearch/FlightStatus",
-  },
-  {
     label: "Destinations",
     href: "/destinations",
+  },
+  {
+    label: "Latest News",
+    href: "/latestnews",
   },
   {
     label: "beOnd Holidays",
@@ -42,6 +38,7 @@ const menuItems: Array<{
   ...navItems,
   { label: "Destinations", href: "/destinations" },
   { label: "Contact", href: "/contact" },
+  { label: "Latest News", href: "/latestnews" },
   { label: "beOnd Assurance", href: "/beond-assurance" },
   { label: "Our Promise", href: "/our-promise" },
   { label: "Terms and conditions", href: "/TermsAndConditions" },
