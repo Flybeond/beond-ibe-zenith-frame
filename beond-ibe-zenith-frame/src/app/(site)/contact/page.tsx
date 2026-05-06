@@ -55,7 +55,7 @@ export default function ContactPage() {
               href="tel:+97148076111"
               className="font-semibold hover:underline underline-offset-4"
             >
-              +971 (0)4 807 6111
+              +971 (0)4 807 6111 - UAE
             </a>
           </li>
           <li>
@@ -63,7 +63,7 @@ export default function ContactPage() {
               href="tel:+390294753047"
               className="font-semibold hover:underline underline-offset-4"
             >
-              +39 (0)2 94753 047
+              +39 (0)2 94753 047 - Italy
             </a>
           </li>
           <li>
@@ -71,7 +71,15 @@ export default function ContactPage() {
               href="tel:+410435086122"
               className="font-semibold hover:underline underline-offset-4"
             >
-              +41 (0)4 3508 6122
+              +41 (0)4 3508 6122 - Switzerland
+            </a>
+          </li>
+          <li>
+            <a
+              href="tel:+496996758887"
+              className="font-semibold hover:underline underline-offset-4"
+            >
+              +49 (0)6 99675 8887 - Germany
             </a>
           </li>
         </ul>
