@@ -122,13 +122,7 @@ const CONTENT: StaticFaqContent = {
           question: "What happens if my beOnd flight is cancelled?",
           answer: (
             <>
-              If your beOnd flight is cancelled more than 30 days before your original departure time, we will provide you with one of the following options:
-              <ol style={{ marginLeft: '20px', paddingLeft: '10px', listStyleType: 'decimal' }}>
-                <li>Rebooking in another beOnd flight (date change without the penalty or fare difference)</li>
-                <li>Full refund to your original form of payment</li>
-              </ol>
-              <br /><br />
-              If your beOnd flight is cancelled between 15 to 30 days of your original departure time, we will provide you with one of the following options:
+              If your beOnd flight is cancelled up to 15 days before your original departure time, we will provide you with one of the following options:
               <ol style={{ marginLeft: '20px', paddingLeft: '10px', listStyleType: 'decimal' }}>
                 <li>Rebooking in another beOnd flight (date change without the penalty or fare difference)</li>
                 <li>Full refund to your original form of payment</li>
@@ -136,28 +130,27 @@ const CONTENT: StaticFaqContent = {
               <br /><br />
               If your beOnd flight is cancelled between 14 days to 48 hours of your original departure time, we will provide you with one of the following options:
               <ol style={{ marginLeft: '20px', paddingLeft: '10px', listStyleType: 'decimal' }}>
-                <li>Rebooking in the next available beOnd flight</li>
+                <li>Rebooking in another beOnd flight (date change without the penalty or fare difference)</li>
                 <li>Full refund to your original form of payment</li>
-                <li>Rebooking on Economy Class on another airline and a full refund of your disrupted sector as a voucher for future travel with beOnd</li>
-                <li>Rebooking on Business Class in another airline, subject to availability and up to USD 5,000.</li>
+                <li>Rebooking on Economy Class on another airline and a refund of 50% of your disruptedsector fare value as a voucher for future travel with beOnd</li>
               </ol>
             </>
           )
 
         },
         {
-          question: "What happens if my beOnd flight is cancelled within 24 hours of departure?",
+          question: "What happens if my beOnd flight is cancelled within 48 hours of departure?",
           answer: (
             <>
-              If your beOnd flight is cancelled within 24 hours of your original departure time, we will provide you with one of the following options:
+              If your beOnd flight is cancelled within 48 hours of your original departure time, we will provide you with one of the following options:
               <ol style={{ marginLeft: '20px', paddingLeft: '10px', listStyleType: 'decimal' }}>
                 <li>Rebooking in the next available beOnd flight</li>
                 <li>Full refund to your original form of payment</li>
                 <li>Rebooking on Economy Class on another airline and a full refund of your disrupted sector as a voucher for future travel with beOnd</li>
-                <li>Rebooking on Business Class in another airline, subject to availability and up to USD 5,000.</li>
+                <li>Rebooking on Business Class in another airline, subject to availability and up to USD 5,000 per segment of travel</li>
               </ol>
               <br /><br />
-              If your beOnd flight is cancelled within 24 hours of your original departure time, depending on eligibility, we will also provide you with EITHER access to our premium lounge (if your rebooked flight departs within 8 hours of your original departure time), OR overnight accommodation (if your rebooked flight departs more than 8 hours of your original departure time).
+              If your beOnd flight is cancelled within 24 hours of your original departure time, we will also provide you with EITHER access to our premium lounge (if your rebooked flight departs within 8 hours of your original departure time), OR overnight accommodation (if your rebooked flight departs more than 8 hours of your original departure time).
             </>
           )
 
@@ -166,14 +159,43 @@ const CONTENT: StaticFaqContent = {
           question: "Who can support me if my beOnd flight is disrupted?",
           answer: (
             <>
-              In the event of a disruption, our 24/7 beOnd Guest Experience team remains fully committed to supporting you and your clients – from notification to rebooking, every step of the way. The team can be reached by contacting +971 (0) 4 807 6111 or{" "}
+              In the event of a disruption, our 24/7 beOnd Guest Experience team remains fully committed to supporting you and your clients – from notification to rebooking, every step of the way. The team can be reached by contacting{" "}
               <a
                 className="text-base text-lightorange font-medium underline cursor-pointer"
                 href="mailto:customersupport@flybeond.com"
               >
                 customersupport@flybeond.com
+              </a>{" "}
+              or one of the following numbers:
+              <br />
+              <br />
+              <a
+                className="text-base text-lightorange font-medium underline cursor-pointer"
+                href="tel:+97148076111"
+              >
+                +971 (0)4 807 6111 - UAE
               </a>
-              .
+              <br />
+              <a
+                className="text-base text-lightorange font-medium underline cursor-pointer"
+                href="tel:+390294753047"
+              >
+                +39 (0)2 94753 047 - Italy
+              </a>
+              <br />
+              <a
+                className="text-base text-lightorange font-medium underline cursor-pointer"
+                href="tel:+410435086122"
+              >
+                +41 (0)4 3508 6122 - Switzerland
+              </a>
+              <br />
+              <a
+                className="text-base text-lightorange font-medium underline cursor-pointer"
+                href="tel:+496996758887"
+              >
+                +49 (0)6 99675 8887 - Germany
+              </a>
             </>
           )
 
