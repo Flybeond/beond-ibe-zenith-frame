@@ -30,7 +30,7 @@ export default function JourneyDetailsWhyBeond({ items }: Props) {
       <div className="site-container pb-16 md:pb-20">
         <div className="flex flex-col gap-16">
           {items.map((item) => (
-            <div key={item.tabLabel} className="flex flex-col gap-8 md:flex-row md:gap-12 lg:gap-16 items-start">
+            <div key={item.tabLabel} className="flex flex-col gap-8 md:flex-row md:gap-12 lg:gap-16 md:items-start">
               {/* Text */}
               <div className="md:w-[31.5%] shrink-0">
                 <h2 className="text-2xl font-semibold tracking-tight text-white md:text-3xl">
@@ -43,7 +43,7 @@ export default function JourneyDetailsWhyBeond({ items }: Props) {
               </div>
 
               {/* Images */}
-              <div className="flex flex-1 gap-3 md:gap-4">
+              <div className="flex w-full gap-3 md:w-auto md:flex-1 md:gap-4">
                 <div className="journey-img relative w-1/2 overflow-hidden rounded-2xl bg-white/10" style={{ height: 420 }}>
                   <Image
                     src={item.image1}
