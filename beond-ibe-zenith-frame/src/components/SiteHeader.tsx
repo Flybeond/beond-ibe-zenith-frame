@@ -36,7 +36,7 @@ const menuItems: Array<{
   openInNewTab?: boolean;
 }> = [
   ...navItems,
-  { label: "Why Beond", href: "/whybeond" },
+  { label: "Why Beond", href: "/company/whybeond" },
   { label: "Destinations", href: "/destinations" },
   { label: "Contact", href: "/contact" },
   { label: "Latest News", href: "/latestnews" },
