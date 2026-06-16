@@ -66,7 +66,7 @@ export default function ChartersPage() {
             <div className="relative pb-16 pr-16 md:pb-20 md:pr-20">
               <div className="relative aspect-4/3 overflow-hidden rounded-2xl shadow-md">
                 <Image
-                  src="/charters/Seat.jpg"
+                  src="/charters/Dining.jpg"
                   alt="beOnd charter cabin"
                   fill
                   className="object-cover"
