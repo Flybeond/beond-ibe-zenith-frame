@@ -135,8 +135,8 @@ export default function ChartersPage() {
           <div className="mt-14 grid grid-cols-1 gap-10 sm:grid-cols-3 sm:gap-8">
             {/* Sports team travel */}
             <div className="flex flex-col items-center text-center">
-              <div className="flex h-14 w-14 items-center justify-center">
-                <img src="/charters/icon1.svg" alt="" aria-hidden className="h-10 w-10" />
+              <div className="relative w-full aspect-video overflow-hidden rounded-xl">
+                <Image src="/charters/Corporate.jpg" alt="Sports team travel" fill className="object-cover" sizes="(max-width: 639px) 100vw, 33vw" />
               </div>
               <h3 className="mt-4 text-lg font-semibold">Sports team travel</h3>
               <p className="mt-2 text-sm leading-relaxed text-white/70">
@@ -148,8 +148,8 @@ export default function ChartersPage() {
 
             {/* Music tours */}
             <div className="flex flex-col items-center text-center">
-              <div className="flex h-14 w-14 items-center justify-center">
-                <img src="/charters/icon2.svg" alt="" aria-hidden className="h-10 w-10" />
+              <div className="relative w-full aspect-video overflow-hidden rounded-xl">
+                <Image src="/charters/Sports.jpg" alt="Music tours" fill className="object-cover" sizes="(max-width: 639px) 100vw, 33vw" />
               </div>
               <h3 className="mt-4 text-lg font-semibold">Music tours</h3>
               <p className="mt-2 text-sm leading-relaxed text-white/70">
@@ -160,8 +160,8 @@ export default function ChartersPage() {
 
             {/* MICE */}
             <div className="flex flex-col items-center text-center">
-              <div className="flex h-14 w-14 items-center justify-center">
-                <img src="/charters/icon3.svg" alt="" aria-hidden className="h-10 w-10" />
+              <div className="relative w-full aspect-video overflow-hidden rounded-xl">
+                <Image src="/charters/Celebration.jpg" alt="Meetings, Incentives, Conferences and Exhibitions" fill className="object-cover" sizes="(max-width: 639px) 100vw, 33vw" />
               </div>
               <h3 className="mt-4 text-lg font-semibold">
                 Meetings, Incentives, Conferences and Exhibitions (MICE)
