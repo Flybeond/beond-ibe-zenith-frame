@@ -109,8 +109,8 @@ export default function ChartersPage() {
               </div>
 
               <a
-                href="mailto:charters@flybeond.com"
-                className="mt-8 inline-block rounded-full bg-(--color-primary-copper) px-6 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+                href="#charter-form"
+                className="mt-8 inline-block rounded-full bg-(--color-primary-copper) px-6 py-3 text-sm font-semibold text-(--color-primary-obsidian) transition-colors hover:bg-(--color-primary-obsidian) hover:text-(--color-primary-copper)"
               >
                 Request a quote
               </a>
@@ -177,7 +177,7 @@ export default function ChartersPage() {
       </section>
 
       {/* Charter form */}
-      <section className="relative min-h-175 flex items-center">
+      <section id="charter-form" className="relative min-h-175 flex items-center">
         <Image
           src="/charters/Form%20Background.png"
           alt=""
