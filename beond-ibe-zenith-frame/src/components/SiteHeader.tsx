@@ -38,6 +38,7 @@ const menuItems: Array<{
   ...navItems,
   { label: "Why Beond", href: "/company/whybeond" },
   { label: "Experience", href: "/experience" },
+  { label: "Charters", href: "/charters" },
   { label: "Destinations", href: "/destinations" },
   { label: "Contact", href: "/contact" },
   { label: "Latest News", href: "/latestnews" },
