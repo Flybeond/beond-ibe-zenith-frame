@@ -55,8 +55,8 @@ export default function ChartersPage() {
         <div className="site-container py-12 md:py-16">
           <div className="grid grid-cols-1 gap-12 md:grid-cols-2 md:gap-16 items-center">
 
-            {/* Overlapping images */}
-            <div className="relative pb-16 pr-16 md:pb-20 md:pr-20">
+            {/* Overlapping images — order-2 on mobile so text comes first */}
+            <div className="relative pb-16 pr-16 md:pb-20 md:pr-20 order-2 md:order-1">
               <div className="relative aspect-4/3 overflow-hidden rounded-2xl shadow-md">
                 <Image
                   src="/charters/Dining.jpg"
@@ -78,7 +78,7 @@ export default function ChartersPage() {
             </div>
 
             {/* Text */}
-            <div>
+            <div className="order-1 md:order-2">
               <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">
                 Charter a plane
               </h2>
