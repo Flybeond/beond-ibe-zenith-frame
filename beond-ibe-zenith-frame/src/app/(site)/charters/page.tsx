@@ -28,30 +28,23 @@ export default function ChartersPage() {
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-5 lg:gap-14">
             <div className="lg:col-span-3 space-y-4">
               <h1 className="text-3xl font-semibold tracking-tight md:text-4xl lg:text-5xl">
-                Beond Charters
+                Private Charters, Redefined
               </h1>
               <p className="text-sm leading-relaxed text-(--color-muted) md:text-base">
-                Making travel arrangements for an exclusive group? We are here to provide you with an
-                exceptional first-class travel experience. Chartering an aircraft from us means you
-                get to pick your schedule, departure airport, and the final destination.
+                With a fleet of aircraft specially configured for premium group travel, beOnd delivers a private charter experience unlike any other.
+
               </p>
             </div>
 
-            <div className="grid grid-cols-3 gap-2 md:gap-3 lg:col-span-2">
-              {(
-                [
-                  ["/charters/Seat.jpg", "beOnd charter seat"],
-                  ["/charters/Aircraft%20Render.jpg", "beOnd aircraft"],
-                  ["/charters/Celebration.jpg", "beOnd celebration"],
-                ] as const
-              ).map(([src, alt]) => (
-                <div
-                  key={src}
-                  className="relative aspect-3/4 overflow-hidden rounded-xl shadow-sm ring-1 ring-black/5"
-                >
-                  <Image src={src} alt={alt} fill className="object-cover" sizes="(max-width: 767px) 30vw, 13vw" />
-                </div>
-              ))}
+            <div className="relative lg:col-span-2 aspect-video overflow-hidden rounded-2xl shadow-sm ring-1 ring-black/5">
+              <Image
+                src="/charters/landscape/Aircraft.jpg"
+                alt="beOnd charter aircraft"
+                fill
+                className="object-cover"
+                sizes="(max-width: 1023px) 100vw, 40vw"
+                priority
+              />
             </div>
           </div>
         </div>
@@ -75,7 +68,7 @@ export default function ChartersPage() {
               </div>
               <div className="absolute bottom-0 right-0 w-2/5 aspect-3/4 overflow-hidden rounded-2xl shadow-xl ring-4 ring-white">
                 <Image
-                  src="/charters/Cabin%20Crew.jpg"
+                  src="/charters/Seat.jpg"
                   alt="beOnd cabin crew"
                   fill
                   className="object-cover"
@@ -92,18 +85,16 @@ export default function ChartersPage() {
 
               <div className="mt-6 space-y-6">
                 <div>
-                  <h3 className="text-xl font-semibold">Our fleet</h3>
+                  <h3 className="text-xl font-semibold">All-premium cabin</h3>
                   <p className="mt-2 text-sm leading-relaxed text-(--color-muted) md:text-base">
-                    Experience the ultimate in luxury travel. Our A319 aircraft has a seating
-                    capacity of 44, featuring premium lie-flat seats for opulent space and comfort.
+                    With a seating capacity of 44 in the A319 and 68 in the A321, our cabin is a tranquil sanctuary of opulent space and comfort.
                   </p>
                 </div>
 
                 <div>
-                  <h3 className="text-xl font-semibold">Bespoke premium service</h3>
+                  <h3 className="text-xl font-semibold">Bespoke service and amenities</h3>
                   <p className="mt-2 text-sm leading-relaxed text-(--color-muted) md:text-base">
-                    Let us tailor your journey for excellence. Tell us what you need, and experience
-                    a personalised in-flight service just for you.
+                    Fully customiseable private charter packages and distinctive onboard touches align seamlessly with your personal intent and preferences. 
                   </p>
                 </div>
               </div>
@@ -124,11 +115,10 @@ export default function ChartersPage() {
         <div className="site-container py-16 md:py-20">
           <div className="mx-auto max-w-2xl text-center">
             <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">
-              Travel in luxury, comfort and privacy
+              Tailored to you, perfected by beOnd
             </h2>
             <p className="mt-4 text-sm leading-relaxed text-white/70 md:text-base">
-              Whether your journey is for a conference, an important match or a sold-out concert,
-              experience in-flight hospitality at its best.
+              Whether your journey is for a conference, an important match or a celebration of a lifetime, experience in-flight hospitality at its best. 
             </p>
           </div>
 
@@ -136,25 +126,22 @@ export default function ChartersPage() {
             {/* Sports team travel */}
             <div className="flex flex-col items-center text-center">
               <div className="relative w-full aspect-video overflow-hidden rounded-xl">
-                <Image src="/charters/Corporate.jpg" alt="Sports team travel" fill className="object-cover" sizes="(max-width: 639px) 100vw, 33vw" />
+                <Image src="/charters/Sports.webp" alt="Sports team travel" fill className="object-cover" sizes="(max-width: 639px) 100vw, 33vw" />
               </div>
-              <h3 className="mt-4 text-lg font-semibold">Sports team travel</h3>
+              <h3 className="mt-4 text-lg font-semibold">Sports teams and music tours</h3>
               <p className="mt-2 text-sm leading-relaxed text-white/70">
-                Get your players, staff, &amp; equipment to their destination in luxury. With a
-                strong focus on comfort, safety and efficiency, we ensure your athletes are
-                well-rested and ready to win.
+Seamless travel for those competing and performing on the world stage.
               </p>
             </div>
 
             {/* Music tours */}
             <div className="flex flex-col items-center text-center">
               <div className="relative w-full aspect-video overflow-hidden rounded-xl">
-                <Image src="/charters/Sports.jpg" alt="Music tours" fill className="object-cover" sizes="(max-width: 639px) 100vw, 33vw" />
+                <Image src="/charters/Corporate.webp" alt="Music tours" fill className="object-cover" sizes="(max-width: 639px) 100vw, 33vw" />
               </div>
-              <h3 className="mt-4 text-lg font-semibold">Music tours</h3>
+              <h3 className="mt-4 text-lg font-semibold">Meetings, Incentives, Conferences and Exhibitions (MICE)</h3>
               <p className="mt-2 text-sm leading-relaxed text-white/70">
-                Whether you are travelling on a world tour or need a last-minute flight to a music
-                festival, we are here to provide you with a solution at any time.
+                Rewarding journeys for teams and executives shaping tomorrow.
               </p>
             </div>
 
@@ -164,12 +151,10 @@ export default function ChartersPage() {
                 <Image src="/charters/Celebration.jpg" alt="Meetings, Incentives, Conferences and Exhibitions" fill className="object-cover" sizes="(max-width: 639px) 100vw, 33vw" />
               </div>
               <h3 className="mt-4 text-lg font-semibold">
-                Meetings, Incentives, Conferences and Exhibitions (MICE)
+                Private expeditions
               </h3>
               <p className="mt-2 text-sm leading-relaxed text-white/70">
-                Simplifying your corporate travel requirements, encompassing meetings, conferences,
-                incentive events, product launches, and even press trips. Let us simplify complex
-                group bookings for you.
+Curated itineraries across the world’s most unique destinations.
               </p>
             </div>
           </div>
